@@ -1,6 +1,7 @@
+%%LIMPIA VARIABLES GLOBALES
+clearvars;
+
+
 %%INICIALIZACION DE ROS
+rosinit('http://192.168.1.35:11311','NodeHost','192.168.1.38');
 
-rosinit('http://172.29.30.64:11311','NodeHost','172.29.29.73');
-
-%%LANZAMOS EL SCRIP PRINCIPAL
-VELOCIDAD;

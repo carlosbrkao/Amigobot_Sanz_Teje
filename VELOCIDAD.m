@@ -12,15 +12,16 @@ msg.Linear.Z=0;
 %%VELOCIDADES ANGULARES(ROTACION)
 msg.Angular.X=0;
 msg.Angular.Y=0;
-msg.Angular.Z=0.9;
+msg.Angular.Z=0.1;
 
 %DEFINIMOS PERIODICIDAD DEL BUCLE
 r = robotics.Rate(10);
 
 %%SENTENCIA DE CONTROL PARA PARAR EL ROBOT
-vueltas = 0;
+vueltas = 1;
 
 %%BUCLE DE CONTROL
+
 while(1)
 
     send(pub,msg);
@@ -28,7 +29,7 @@ while(1)
     waitfor(r);
     
    
-    if(vueltas>5)
+    if(vueltas>30)
         msg.Linear.X=0;
         msg.Angular.Z=0;
         send(pub,msg);
@@ -38,4 +39,4 @@ while(1)
 end
 
 %%LLAMAMOS AL SCRIPT END
-END;
+END_2_1;
