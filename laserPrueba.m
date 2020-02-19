@@ -33,4 +33,4 @@ disp(inc);
 
 figure
 plot(datosX,datosY,'co','MarkerFaceColor',[1,0,0],'MarkerEdgeColor','r');
-title('Medidas del laser_1(1000 medidad)');   
+title('Medidas del laser_1');   
