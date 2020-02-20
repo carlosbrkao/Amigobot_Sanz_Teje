@@ -17,15 +17,15 @@ rotacion=euler(1);
 
 
 posicion = posicion +1;
-datosLin(posicion)= pos.X;
+datosLin(posicion)= pos.Y;
 datosAn(posicion)= rotacion;
 
 
-disp("POSICON DEL ROBOT:");
-disp("   EJE X: "+pos.X);
-disp("   EJE Y: "+pos.Y);
-disp(" ");
-disp("ORIENTACION DEL ROBOT:");
-disp("   EJE Z: "+rotacion);
-disp(" ");
-disp(" ");
+% disp("POSICON DEL ROBOT:");
+% disp("   EJE X: "+pos.X);
+% disp("   EJE Y: "+pos.Y);
+% disp(" ");
+% disp("ORIENTACION DEL ROBOT:");
+% disp("   EJE Z: "+rotacion);
+% disp(" ");
+% disp(" ");

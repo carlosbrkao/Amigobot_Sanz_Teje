@@ -14,22 +14,23 @@ end
 
 format long 
 inc = laser_1.LatestMessage.AngleIncrement;
-disp(inc);
     
     a=1;
     dist = laser_1.LatestMessage.Ranges;
     angulo = laser_1.LatestMessage.AngleMin;
-    while(a<rayos+1)
-        X = cos(angulo)*dist(a);
-        Y = sin(angulo)*dist(a);
-        datosX(a)=X;
-        datosY(a)=Y;
-        angulo = angulo + inc;
-        disp(angulo);
-        a = a+1;
+    while(a<rayos)
+        
+            X = cos(angulo)*dist(a);
+            Y = sin(angulo)*dist(a);
+        if(X<2) && (X>-2) 
+            if(Y<2)&&(Y>-2)
+                datosX(a)=X;
+                datosY(a)=Y;
+            end
+        end
+        angulo = angulo + 4*inc;
+        a = a+4;
     end
-    disp(datosX);
-    disp(datosY);
 
 figure
 plot(datosX,datosY,'co','MarkerFaceColor',[1,0,0],'MarkerEdgeColor','r');
