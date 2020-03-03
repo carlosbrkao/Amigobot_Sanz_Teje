@@ -1,0 +1,33 @@
+%% DECLARACIÓN DE SUBSCRIBERS
+laser_1=rossubscriber('/robot0/laser_1');  %% Suscriber al laser
+
+%% MENSAJES DEL ROBOT PARA LASER
+pause(1);
+while (strcmp(laser_1.LatestMessage.Header.FrameId,'robot0_laser_1')~=1)
+laser_1.LatestMessage
+end
+
+%% DATOS DE CONTROL
+rayos = 400;
+datosX = zeros(1,400);
+datosY = zeros(1,400);
+
+format long 
+inc = laser_1.LatestMessage.AngleIncrement; %Incremento del angulo en cada rayo
+dist = laser_1.LatestMessage.Ranges;        %Array de distancias
+angulo_min = laser_1.LatestMessage.AngleMin;%Angulo minimo en rad
+
+cuarto = rayos/4;
+
+%% DETECTORES DE PARED
+p1 = laser_p1(angulo_min,inc,cuarto,dist);
+p2 = laser_p2(angulo_min,inc,cuarto,dist);
+p3 = laser_p3(angulo_min,inc,cuarto,dist);
+p4 = laser_p4(angulo_min,inc,cuarto,dist);
+disp(p1);
+disp(p2);
+disp(p3);
+disp(p4);
+
+%% TIPO DE CASILLA
+disp("TIPO DE CASILLA = " + tipo_Casilla(p1,p2,p3,p4));
