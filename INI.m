@@ -3,4 +3,4 @@ clearvars;
 
 
 %%INICIALIZACION DE ROS
-rosinit('http://192.168.1.37:11311','NodeHost','192.168.1.35');
+rosinit('http://192.168.1.35:11311','NodeHost','192.168.1.43');

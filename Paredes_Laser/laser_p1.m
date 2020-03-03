@@ -1,20 +1,25 @@
 function pared = laser_p1(angMin,angInc,cuarto,dist)
 
-    datosX = zeros(1,20);
-    datosY = zeros(1,20);
+   
+    
+    cantRayos = 20; %Franja de rayos a medir
+    tolerancia = 0.01; % Tolerancia en metros a la hora de medir
+    posiblesErrores = 4; % Medidas erroneas permitidas
+    distanciaMax = 2;%Distancia maxima a una pared en m
+    
+    
+    datos = zeros(1,cantRayos);
+    
+    angulo = angMin + (angInc*((3*cuarto)-(cantRayos/2)));
+    pos = (3*cuarto)-(cantRayos/2);
     a=1;
-    
-    
-    angulo = angMin + (angInc*((3*cuarto)-10));
-    pos = (3*cuarto)-10;
-    while(a<21)
+    while(a<(cantRayos+1))
         
             X = cos(angulo)*dist(pos);
             Y = sin(angulo)*dist(pos);
-        if(X<2) && (X>-2) 
-            if(Y<2)&&(Y>-2)
-                datosX(a)=X;
-                datosY(a)=Y;
+        if(X<distanciaMax) && (X>-distanciaMax) 
+            if(Y<distanciaMax)&&(Y>-distanciaMax)
+                datos(a)=Y;
             end
         end
         angulo = angulo + angInc;
@@ -22,48 +27,26 @@ function pared = laser_p1(angMin,angInc,cuarto,dist)
         pos = pos +1 ;
     end
     
-    a = 1 ;
-    
 
-    contCeros = 0;
-    Xinicial = datosX(10);
-    Yinicial = datosY(10);
-    Xmal = false;
-    Ymal = false;
-    while(a<21)
-        if(datosX(a)==0)
-            contCeros = contCeros + 1;
-        end
-        if(datosX(a)~=0)
-            if((datosX(a)>(Xinicial +0.1))|| (datosX(a)<(Xinicial  -0.1)))
-                Xmal = true;
-                break;
-            end
-        end
-        a = a + 1;
-    end
-    a = 1 ;
-    while(a<21)
-        if(datosY(a)==0)
-            contCeros = contCeros + 1;
-        end
-        if(datosY(a)~=0)
-            if((datosY(a)>(Yinicial +0.1))|| (datosY(a)<(Yinicial  -0.1)))
-                Ymal = true;
-                break;
+
+    contError = 0;
+    inicial = datos(cantRayos/2);
+    pared = true;
+    
+        a = 1 ;
+    while(a<(cantRayos+1))
+        if(datos(a)==0)
+            contError = contError + 1;
+        else
+            if((datos(a)>(inicial + tolerancia)) || (datos(a)<(inicial  - tolerancia)))
+                contError = contError + 1;
             end
         end
         a = a + 1;
     end
     
-    if(contCeros/2 > 2)
+    if(contError > posiblesErrores)
         pared = false;
-    else
-        if(Ymal && Xmal)
-            pared = false;
-        else
-            pared = true;
-        end
     end
     
 
