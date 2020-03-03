@@ -6,9 +6,13 @@ function posicionReal = posicionReal(dist,posicion,rotacion,orientacion_s,i)
     y1 = 0.0;
     x2 = 0.0;
     y2 = 0.0;
+    xp = 0.0;
+    yp = 0.0;
     %%Calculo de la orientacion
     angulo_1 = rotacion + orientacion_s(i) - angulo_calc;
     angulo_2 = rotacion + orientacion_s(i) + angulo_calc;
+    %PUNTA
+    angulo_p = rotacion + orientacion_s(i);
     d1 = ['I:',num2str(i),' angulo_1_inf: ',num2str(angulo_1),' angulo_2_sup: ',num2str(angulo_2)];
     disp(d1);
     %%Calculo de x1/y1
@@ -61,12 +65,31 @@ function posicionReal = posicionReal(dist,posicion,rotacion,orientacion_s,i)
     end
     d2 = ['Angulo_2: ',num2str(angulo_2),' X2: ',num2str(x2),' y2: ',num2str(y2)];
     disp(d2);
-    %figure
-    %pX = [x1,x2];
-    %pY = [y1,y2];
-    %plot(pX,pY,'co','MarkerFaceColor',[1,0,0],'MarkerEdgeColor','r');
-    %t = strcat('Medidas sonar',int2str(i));
-    %title(t);  
-    posicionReal = [x1,y1,x2,y2];
+    %%Calculo de xp/yp
+    if(angulo_p < 0)
+        angulo_p = angulo_p + 2*pi;
+    end
+    if(angulo_p <= pi/2)
+        xp = cos(angulo_p)*dist + posicion.X;
+        yp = sin(angulo_p)*dist + posicion.Y;
+    end
+    if(angulo_p > pi/2 && angulo_p <= pi)
+        angulo_p = pi - angulo_p;
+        xp = -cos(angulo_p)*dist + posicion.X;
+        yp = sin(angulo_p)*dist + posicion.Y;
+    end
+    if(angulo_p > pi && angulo_p <= (3*pi)/2)
+        angulo_p = angulo_p - pi;
+        xp = -cos(angulo_p)*dist + posicion.X;
+        yp = -sin(angulo_p)*dist + posicion.Y;
+    end
+    if(angulo_p > (3*pi)/2)
+        angulo_p = 2*pi - angulo_p;
+        xp = cos(angulo_p)*dist + posicion.X;
+        yp = -sin(angulo_p)*dist + posicion.Y;
+    end
+    %posicionReal = [x1,y1,x2,y2];
+    %PUNTA
+    posicionReal = [x1,y1,x2,y2,xp,yp];
     
     
