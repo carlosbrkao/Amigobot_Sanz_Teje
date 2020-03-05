@@ -101,7 +101,6 @@ figure
 plot(x_grafica,y_grafica,'co','MarkerFaceColor',[1,0,0],'MarkerEdgeColor','r');
 title('Medidas Sonar');
 %Estado pared
-%estadoParedes = paredes_p1_6(x_grafica,y_grafica,distancias_s);
-estadoParedes = muros_cuadricula(x_grafica,y_grafica,distancias_s,pos);
+estadoParedes = paredes_p1_6(x_grafica,y_grafica,distancias_s);
 disp ('ESTADO PARED:');
 disp (estadoParedes);
