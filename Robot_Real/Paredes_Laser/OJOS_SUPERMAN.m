@@ -27,6 +27,9 @@ p1 = laser_p1(angulo_min,inc,cuarto,dist);
 p2 = laser_p2(angulo_min,inc,cuarto,dist);
 p3 = laser_p3(angulo_min,inc,cuarto,dist);
 p4 = laser_p4(angulo_min,inc,cuarto,dist);
-
+disp(p1);
+disp(p2);
+disp(p3);
+disp(p4);
 %% TIPO DE CASILLA
 disp("TIPO DE CASILLA = " + tipo_Casilla(p1,p2,p3,p4));
