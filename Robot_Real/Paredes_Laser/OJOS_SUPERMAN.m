@@ -1,5 +1,5 @@
 %% DECLARACIÓN DE SUBSCRIBERS
-laser_1=rossubscriber('/robot0/laser_1');  %% Suscriber al laser
+laser_1=rossubscriber('/laser_1');  %% Suscriber al laser
 
 %% MENSAJES DEL ROBOT PARA LASER
 pause(2);
@@ -8,7 +8,7 @@ laser_1.LatestMessage
 end
 
 %% DATOS DE CONTROL
-rayos = 400; % cantidad de rayos del laser
+rayos = 360; % cantidad de rayos del laser
 
 
 %% GENERACION DE DATOS Y ESTRUCTURAS NECESARIAS
