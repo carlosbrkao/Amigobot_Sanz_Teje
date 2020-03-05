@@ -1,9 +1,9 @@
 %% DECLARACIÓN DE SUBSCRIBERS
-laser_1=rossubscriber('/laser_1');  %% Suscriber al laser
+laser_1=rossubscriber('/scan');  %% Suscriber al laser
 
 %% MENSAJES DEL ROBOT PARA LASER
 pause(2);
-while (strcmp(laser_1.LatestMessage.Header.FrameId,'robot0_laser_1')~=1)
+while (strcmp(laser_1.LatestMessage.Header.FrameId,'laser_frame')~=1)
 laser_1.LatestMessage
 end
 
