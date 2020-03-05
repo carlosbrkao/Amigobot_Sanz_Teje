@@ -1,10 +1,7 @@
-function muros = muros(puntosX,puntosY,distancias)
+function c_paredes = paredes_p1_6(puntosX,puntosY,distancias)
     %Datos
-    paredes = [false,false,false,false] %Delante / Dcha / Atrás / Izq
     estadoPared = 0;
     paredess = 0;
-    puntosXposibles = zeros(length(puntosX));
-    puntosYposibles = zeros(length(puntosY));
     posibles_s = zeros(length(distancias));
     %Bucle para estudiar puntos y quedarnos con los que nos interesan
     for i = 1:8
@@ -13,52 +10,43 @@ function muros = muros(puntosX,puntosY,distancias)
         if(distancias(i) <= 2.02)
             %Si cumple la condicion recabamos la info de sus puntos
             posibles_s(i) = 1;
-            if(i~=1)
-                auxj = (i-1)*3+1;
-                for j = auxj:auxj+2
-                    puntosXposibles(j) = puntosX(j);
-                    puntosYposibles(j) = puntosY(j);
-                end
-            else
-                for j = 1:3
-                    puntosXposibles(j) = puntosX(j);
-                    puntosYposibles(j) = puntosY(j);
-                end
-            end
         end
         %Si no la cumple no nos importa su vida
     end
     %Evaluamos casos
-    %Delante
-    if(posibles_s(2) == 0 || posibles_s(3) == 0 || posibles_s(4) == 0 || posibles_s(5) == 0)
-        paredes(1) = false;
-    else
-        paredes(1) = true;
-        paredess = paredess + 1000;
+    %Delante------------------------------------------------------------
+    if(posibles_s(2) == 1 && posibles_s(3) == 1 && posibles_s(4) == 1 && posibles_s(5) == 1)
+        puntoI2 = puntosX(2,1);
+        puntoI3 = puntosX(3,1);
+        puntoI4 = puntosX(4,2);
+        puntoI5 = puntosX(5,2);
+        disp puntosDelante;
+        s = ['p2: ',num2str(puntoI2),' p3: ',num2str(puntoI3),' p4: ',num2str(puntoI4),' p5: ',num2str(puntoI5)];
+        disp(s);
+        if((((puntoI2 - 0.02) <= puntoI5) && ((puntoI2 + 0.12) >= puntoI5)) && (((puntoI3 - 0.02) <= puntoI4) && ((puntoI3 + 0.12) >= puntoI4)))
+            paredess = paredess + 1000;
+        end
     end
-    %Dcha
-    if(posibles_s(6) == 0)
-        paredes(2) = false;
-    else
-        paredes(2) = true;
+    %Dcha---------------------------------------------------------
+    if(posibles_s(6) == 1)
         paredess = paredess + 100;
     end
-    %Atrás
-    if(posibles_s(7) == 0 || posibles_s(8) == 0)
-        paredes(3) = false;
-    else
-        paredes(3) = true;
-        paredess = paredess + 10;
+    %Atrás---------------------------------------------------------
+    if(posibles_s(7) == 1 && posibles_s(8) == 1)
+        puntoI7 = puntosX(7,1);
+        puntoI8 = puntosX(8,2);
+        disp puntosDetras;
+        s = ['p7: ',num2str(puntoI7),' p8: ',num2str(puntoI8)];
+        disp(s);
+        if(((puntoI7 - 0.02) <= puntoI8) && ((puntoI7 + 0.02) >= puntoI8))
+            paredess = paredess + 10;
+        end
     end
-    %Izq
-    if(posibles_s(1) == 0)
-        paredes(4) = false;
-    else
-        paredes(4) = true;
+    %Izq---------------------------------------------------------------
+    if(posibles_s(1) == 1)
         paredess = paredess + 1;
     end
-    disp Array_booleanos;
-    disp(paredes);
+    %Codificacion del número de paredes
     if(paredess == 1000)
         estadoPared = 1; 
     end
@@ -105,4 +93,4 @@ function muros = muros(puntosX,puntosY,distancias)
         estadoPared = 15;
     end
     %Salida
-    muros = estadoPared;
+    c_paredes = estadoPared;

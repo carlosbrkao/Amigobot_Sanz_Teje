@@ -13,8 +13,8 @@ function posicionFinal = posicionFinal(dist,posicion,rotacion,orientacion_s,posi
     angulo_2 = rotacion + orientacion_s + angulo_calc; %+ orientacion_s(i) - angulo_calc;
     %PUNTA
     angulo_p = rotacion + orientacion_s; %+ orientacion_s(i);
-    d1 = ['I:',num2str(i),' angulo_1_inf: ',num2str(angulo_1),' angulo_2_sup: ',num2str(angulo_2)];
-    disp(d1);
+%     d1 = ['I:',num2str(i),' angulo_1_inf: ',num2str(angulo_1),' angulo_2_sup: ',num2str(angulo_2)];
+%     disp(d1);
     %%Calculo de x1/y1
     if(angulo_1 < 0)
         angulo_1 = angulo_1 + 2*pi;
@@ -38,8 +38,8 @@ function posicionFinal = posicionFinal(dist,posicion,rotacion,orientacion_s,posi
         x1 = cos(angulo_1)*dist + posicion.X + posiciones_s(1,i);
         y1 = -sin(angulo_1)*dist + posicion.Y + posiciones_s(2,i);
     end
-    d2 = ['Angulo_1: ',num2str(angulo_1),' X1: ',num2str(x1),' y1: ',num2str(y1)];
-    disp(d2);
+%     d2 = ['Angulo_1: ',num2str(angulo_1),' X1: ',num2str(x1),' y1: ',num2str(y1)];
+%     disp(d2);
     %%Calculo de x2/y2
     if(angulo_2 < 0)
         angulo_2 = angulo_2 + 2*pi;
@@ -63,8 +63,8 @@ function posicionFinal = posicionFinal(dist,posicion,rotacion,orientacion_s,posi
         x2 = cos(angulo_2)*dist + posicion.X + posiciones_s(1,i);
         y2 = -sin(angulo_2)*dist + posicion.Y + posiciones_s(2,i);
     end
-    d2 = ['Angulo_2: ',num2str(angulo_2),' X2: ',num2str(x2),' y2: ',num2str(y2)];
-    disp(d2);
+%     d2 = ['Angulo_2: ',num2str(angulo_2),' X2: ',num2str(x2),' y2: ',num2str(y2)];
+%     disp(d2);
     %%Calculo de xp/yp
     if(angulo_p < 0)
         angulo_p = angulo_p + 2*pi;
@@ -88,7 +88,6 @@ function posicionFinal = posicionFinal(dist,posicion,rotacion,orientacion_s,posi
         xp = cos(angulo_p)*dist + posicion.X + posiciones_s(1,i);
         yp = -sin(angulo_p)*dist + posicion.Y + posiciones_s(2,i);
     end
-    %posicionReal = [x1,y1,x2,y2];
     %PUNTA
     posicionFinal = [x1,y1,x2,y2,xp,yp];
     
