@@ -33,7 +33,7 @@ function c_paredes = paredes_p1_6(puntosX,puntosY,distancias)
         disp puntosDelante;
         s = ['p3: ',num2str(puntoI3),' p4: ',num2str(puntoI4)];
         disp(s);
-        if(((puntoI3 - 0.02) <= puntoI4) && ((puntoI3 + 0.02) >= puntoI4))
+        if(((puntoI3 - 0.06) <= puntoI4) && ((puntoI3 + 0.06) >= puntoI4))
             paredess = paredess + 1000;
         end
     end
@@ -48,7 +48,7 @@ function c_paredes = paredes_p1_6(puntosX,puntosY,distancias)
         disp puntosDetras;
         s = ['p7: ',num2str(puntoI7),' p8: ',num2str(puntoI8)];
         disp(s);
-        if(((puntoI7 - 0.02) <= puntoI8) && ((puntoI7 + 0.02) >= puntoI8))
+        if(((puntoI7 - 0.06) <= puntoI8) && ((puntoI7 + 0.06) >= puntoI8))
             paredess = paredess + 10;
         end
     end
