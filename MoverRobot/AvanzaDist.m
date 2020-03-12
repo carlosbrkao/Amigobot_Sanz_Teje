@@ -43,3 +43,6 @@ function AvanzaDist(Vel,distancia)
         send(pub,msg);
         waitfor(r);
     end
+    
+    d = ["Avance de ",num2str(distancia),"º a velocidad ",num2str(vel)];
+    disp (d);
