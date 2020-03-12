@@ -51,4 +51,6 @@ end
     msg.Angular.Z = 0;
     send(pub,msg);
 
+    d = ["Giro de ",num2str(angulo),"º a velocidad ",num2str(vel)];
+    disp (d);
 
