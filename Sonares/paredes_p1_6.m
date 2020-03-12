@@ -11,22 +11,9 @@ function c_paredes = paredes_p1_6(puntosX,puntosY,distancias)
             %Si cumple la condicion recabamos la info de sus puntos
             posibles_s(i) = 1;
         end
-        %Si no la cumple no nos importa su vida
     end
     %Evaluamos casos
-    %Delante------------------------------------------------------------
-%     if(posibles_s(2) == 1 && posibles_s(3) == 1 && posibles_s(4) == 1 && posibles_s(5) == 1)
-%         puntoI2 = puntosX(2,1);
-%         puntoI3 = puntosX(3,1);
-%         puntoI4 = puntosX(4,2);
-%         puntoI5 = puntosX(5,2);
-%         disp puntosDelante;
-%         s = ['p2: ',num2str(puntoI2),' p3: ',num2str(puntoI3),' p4: ',num2str(puntoI4),' p5: ',num2str(puntoI5)];
-%         disp(s);
-%         if((((puntoI2 - 0.02) <= puntoI5) && ((puntoI2 + 0.12) >= puntoI5)) && (((puntoI3 - 0.02) <= puntoI4) && ((puntoI3 + 0.12) >= puntoI4)))
-%             paredess = paredess + 1000;
-%         end
-%     end
+    %Delante------------------------------------------------------
     if(posibles_s(3) == 1 && posibles_s(4) == 1)
         puntoI3 = puntosX(3,1);
         puntoI4 = puntosX(4,2);
@@ -43,12 +30,12 @@ function c_paredes = paredes_p1_6(puntosX,puntosY,distancias)
     end
     %Atrás---------------------------------------------------------
     if(posibles_s(7) == 1 && posibles_s(8) == 1)
-        puntoI7 = puntosX(7,1);
-        puntoI8 = puntosX(8,2);
+        puntoI7 = puntosX(7,2);
+        puntoI8 = puntosX(8,1);
         disp puntosDetras;
         s = ['p7: ',num2str(puntoI7),' p8: ',num2str(puntoI8)];
         disp(s);
-        if(((puntoI7 - 0.02) <= puntoI8) && ((puntoI7 + 0.02) >= puntoI8))
+        if(((puntoI7 - 0.06) <= puntoI8) && ((puntoI7 + 0.06) >= puntoI8))
             paredess = paredess + 10;
         end
     end
