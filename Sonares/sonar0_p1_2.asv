@@ -88,19 +88,11 @@ while(b<(1000/5)+1)
         c = c + 1;
         a = a + 1;
     end
-    sumaX = sumaX/5;
+    suma = suma/5;
     mediaMovX(b) = sumaX;
-    sum_ventana_movilX = sum_ventana_movilX + sumaX;
-    sumaY = sumaY/5;
-    mediaMovY(b) = sumaY;
-    sum_ventana_movilY = sum_ventana_movilY + sumaY;
+    mediaMovX(b) = sumaX;
     b = b + 1;
 end
-figure
-plot(mediaMovX,'co','MarkerFaceColor',[1,0,0],'MarkerEdgeColor','r');
-title('Media Movil X');
-figure
-plot(mediaMovY,'co','MarkerFaceColor',[1,0,0],'MarkerEdgeColor','r');
-title('Media Movil Y');
-m = ['Media movil: X:',num2str(sum_ventana_movilX/(1000/5)),' Y: ',num2str(sum_ventana_movilY/(1000/5))];
+media_ventana_movil = sum_ventana_movil / 5;
+m = ['Posicion: X:',num2str(pos.X),' Y: ',num2str(pos.Y),' Orientacion: ',num2str(rotacion)];
 disp(m);

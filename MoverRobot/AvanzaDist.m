@@ -44,5 +44,5 @@ function AvanzaDist(Vel,distancia)
         waitfor(r);
     end
     
-    d = ["Avance de ",num2str(distancia),"º a velocidad ",num2str(vel)];
+    d = ["Avance de ",num2str(distancia),"º a velocidad ",num2str(Vel)];
     disp (d);
