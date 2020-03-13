@@ -23,12 +23,12 @@ while(i<cantidad+1)
     datosX(i)=X;
     datosY(i)=Y;
     i=i+1;
-    
+    disp(i);
     waitfor(r);
 end
 figure
 plot(datosX,datosY,'-o','MarkerFaceColor',[1,0,0],'MarkerEdgeColor','r');
-title('Medidas del laser(1000 medidad)');   
+title('Medidas del laser_simulacion(1000 medidad)');   
     
     
     

@@ -5,14 +5,14 @@ pub = rospublisher('/robot0/cmd_vel', 'geometry_msgs/Twist');
 msg = rosmessage(pub);
 
 %%VELOCIDADES LINEALES
-msg.Linear.X=0.5;
+msg.Linear.X=0;
 msg.Linear.Y=0;
 msg.Linear.Z=0;
 
 %%VELOCIDADES ANGULARES(ROTACION)
 msg.Angular.X=0;
 msg.Angular.Y=0;
-msg.Angular.Z=0;
+msg.Angular.Z=0.9;
 
 %DEFINIMOS PERIODICIDAD DEL BUCLE
 r = robotics.Rate(10);
@@ -24,7 +24,7 @@ vueltas = 1;
 %%BUCLE DE CONTROL
     reset(r);
 while(1)
-    disp(r.TotalElapsedTime);
+    %disp(r.TotalElapsedTime);
     send(pub,msg);
     ODOM; %%LLAMAMOS AL SCRIPT DE ODOMETRIA
     waitfor(r);

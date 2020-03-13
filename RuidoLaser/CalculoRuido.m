@@ -1,4 +1,4 @@
-openfig('1000_laser_real','invisible'); 
+openfig('ruidoLaserSimulacion.fig','invisible'); 
 Datos = get(gca,'Children');
 Muestras = get(Datos,'XData');
 
@@ -12,7 +12,7 @@ ruidos = zeros(1,cantMuestras);
 
 a =1;
 while(a<(cantMuestras+1))
-    if((Muestras(a))>-2)
+    if((Muestras(a))>2)
         ruido = (Muestras(a)+2);
         ruidos(a)=ruido;
     else
@@ -27,14 +27,13 @@ while(a<(cantMuestras+1))
     if(ruidos(a)>0 && ruidos(a)<1)
         if(ruidos(a)>max)
             max = ruidos(a);
-        end
+        end;
         media = media + ruidos(a);
         MuestrasRuido = MuestrasRuido + 1;
     end
     a = a + 1;   
 end
-media = media/MuestrasRuido;
-
+disp(media);
 disp("El valor maximo del ruido es: " + max + "m");
 disp("El valor medio del ruido es: " + media + "m");
 

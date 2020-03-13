@@ -1,4 +1,4 @@
-openfig('1000_laser_real.fig','invisible'); 
+openfig('ruidoLaserSimulacion.fig','invisible'); 
 Datos = get(gca,'Children');
 Muestras = get(Datos,'XData');
 cantMuestras = length(Muestras);

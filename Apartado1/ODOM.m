@@ -17,7 +17,7 @@ rotacion=euler(1);
 
 
 posicion = posicion +1;
-datosLin(posicion)= pos.Y;
+datosLin(posicion)= pos.X;
 datosAn(posicion)= rotacion;
 
 

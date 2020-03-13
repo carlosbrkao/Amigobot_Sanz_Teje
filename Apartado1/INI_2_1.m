@@ -1,3 +1,5 @@
+clearvars;
+
 %%VARIABLE GLOBAL
 global datosLin;
 datosLin=[];
