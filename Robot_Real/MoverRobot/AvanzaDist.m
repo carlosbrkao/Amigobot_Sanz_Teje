@@ -1,3 +1,5 @@
+%% Función para ordenar al robot que se desplace una distancia facilitada por parámetros a una velocidad
+%% también prefijada por parámetros
 function AvanzaDist(Vel,distancia)
 
     %% DECLARACIÓN DE SUBSCRIBERS
@@ -31,15 +33,16 @@ function AvanzaDist(Vel,distancia)
     while (1)
 
         pos=odom.LatestMessage.Pose.Pose.Position;
-        %DISTANCIA RECORRIDA
+        %% DISTANCIA RECORRIDA
         dist=sqrt((pos_inicial.X-pos.X)^2+(pos_inicial.Y-pos.Y)^2);
 
-
+        %% En cuanto se supera la distancia a recorrer se para el robot
         if (dist>distancia)
             msg.Linear.X=0;
             send(pub,msg);
             break;
         end
+        %% Mientras no se haya superado la distancia, el robot mantiene su velocidad
         send(pub,msg);
         waitfor(r);
     end

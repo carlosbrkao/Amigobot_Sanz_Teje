@@ -1,3 +1,5 @@
+%% Función para ordenar al robot que rote un ángulo facilitado por parámetros a una velocidad
+%% también prefijada por parámetros
 function rotacion(vel,angulo)
 
 %% DECLARACIÓN DE SUBSCRIBERS
@@ -9,23 +11,23 @@ while (strcmp(odom.LatestMessage.ChildFrameId,'robot0')~=1)
 odom.LatestMessage
 end
 
-%%DECLARAMOS EL PUBLISHER
+%% DECLARAMOS EL PUBLISHER
 pub = rospublisher('/robot0/cmd_vel', 'geometry_msgs/Twist');
 
-%%GENERAMOS EL TIPO DE MENSAJE
+%% GENERAMOS EL TIPO DE MENSAJE
 msg = rosmessage(pub);
 
-%%VELOCIDADES LINEALES
+%% VELOCIDADES LINEALES
 msg.Linear.X=0;
 msg.Linear.Y=0;
 msg.Linear.Z=0;
 
-%%VELOCIDADES ANGULARES(ROTACION)
+%% VELOCIDADES ANGULARES(ROTACION)
 msg.Angular.X=0;
 msg.Angular.Y=0;
 msg.Angular.Z=vel;
 
-%%ANGULO DESEADO
+%% ANGULO DESEADO
 anguloRad = angulo*pi/180;
 
 if(anguloRad<0)
