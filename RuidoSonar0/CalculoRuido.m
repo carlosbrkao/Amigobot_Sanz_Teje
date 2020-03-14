@@ -1,3 +1,4 @@
+%% Indicamos la gráfica con los datos a los que les calcuraremos el ruido
 openfig('sonar_1000_amigobot.fig','invisible'); 
 Datos = get(gca,'Children');
 Muestras = get(Datos,'YData');

@@ -1,3 +1,5 @@
+%% Función que valora el resultado de la combinación de paredes detectadas y devuelve el código
+%% asignado al número de paredes del entorno de la casilla
 function tipo = tipo_Casilla(p1,p2,P3,P4)
 
     if(~p1)&&(~p2)&&(~P3)&&(~P4) 
