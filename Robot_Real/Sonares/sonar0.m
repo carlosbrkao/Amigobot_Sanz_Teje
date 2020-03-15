@@ -1,4 +1,4 @@
-
+%% 
  %%Radianes
 cantidad = 1000;
 datosX = zeros(1,1000);

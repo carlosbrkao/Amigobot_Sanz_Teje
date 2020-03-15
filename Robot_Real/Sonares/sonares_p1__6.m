@@ -50,7 +50,7 @@ orientaciones_s = [1.5708,0.767945,0.20944,-0.20944,-0.767945,-1.5708,-2.51327,2
 pos = odom.LatestMessage.Pose.Pose.Position;
 rot = odom.LatestMessage.Pose.Pose.Orientation;
 %% Datos para calcular la distancia min(en el eje de orientacion del sensor)
-amplitud_vision = 0.261799, %rad
+amplitud_vision = 0.261799; %rad
 angulo_calc = amplitud_vision/2; %rad
 dist = 0.0;
 dist_min = 0.0;
@@ -69,15 +69,7 @@ for i = 1:8
     dist = subscribers_s(i).LatestMessage.Range_;
     distancias_s(i) = dist;
     dist_min = cos(angulo_calc)*dist; %distancia min
-%     supp = (sin(angulo_calc)*dist)*2; %sup de choque min
-%     %% Recogemos posición actual
-%     %% Datos para calcular posicion y rotacion
-%     pos = odom.LatestMessage.Pose.Pose.Position;
-%     rot = odom.LatestMessage.Pose.Pose.Orientation;
-%     %% Calculo la rotación
-%     quaternion=[rot.W rot.X rot.Y rot.Z];
-%     euler=quat2eul(quaternion,'ZYX');
-%     rotacion=euler(1);
+    supp = (sin(angulo_calc)*dist)*2; %sup de choque min
     %% Calculamos las coordenadas eficaces sobre el plano
     coordenadasCompletas = posicionFinal(dist,pos,rotacion,orientaciones_s(i),posiciones_s,i);
     x_grafica(i,1) = coordenadasCompletas(1);

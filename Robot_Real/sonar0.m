@@ -1,5 +1,5 @@
 
- %%Radianes
+%%Radianes
 cantidad = 1000;
 datosX = zeros(1,1000);
 datosY = zeros(1,1000);
