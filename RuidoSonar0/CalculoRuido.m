@@ -3,6 +3,7 @@ openfig('sonar_1000_amigobot.fig','invisible');
 Datos = get(gca,'Children');
 Muestras = get(Datos,'YData');
 
+%% CANTIDAD DE MUESTRAS
 cantMuestras = length(Muestras);
 
 
@@ -11,6 +12,7 @@ media = 0;
 MuestrasRuido = 0;
 ruidos = zeros(1,cantMuestras);
 
+%% Calculamos la diferencia de las medidas con la medida que deberia ser(2 m) 
 a =1;
 while(a<(cantMuestras+1))
     if((Muestras(a))<2)
@@ -22,6 +24,7 @@ while(a<(cantMuestras+1))
     a = a+1;
 end
 
+%% Calculamos el ruido medio y maximo gracias al array de ruidos que hemos creado
 a = 1;
 while(a<(cantMuestras+1))
     if(ruidos(a)>0)
@@ -39,6 +42,7 @@ disp("El valor maximo del ruido es: " + max + "m");
 disp("El valor medio del ruido es: " + media + "m");
 
 
+%% Caluclamos la varianza del ruido mediante el array que hemos creado
 sumatorio = 0;
 a=1;
 varianza = 0;

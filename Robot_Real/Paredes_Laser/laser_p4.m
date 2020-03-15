@@ -12,7 +12,7 @@ function pared = laser_p4(angMin,angInc,cuarto,dist)
     angulo = angMin + (angInc*((4*cuarto)-(cantRayos/2))); %Ángulo de orientación del rayo
     pos = (4*cuarto)-(cantRayos/2);
     a=1;
-    %% Recogemos los datos cercanos al eje x por el lado trasero del robot
+    %% Recogemos los datos cercanos al eje x por el lado trasero izquierdo del robot
     while(a<(cantRayos/2)+1)
         
             X = cos(angulo)*dist(pos);
@@ -29,6 +29,7 @@ function pared = laser_p4(angMin,angInc,cuarto,dist)
     
     angulo = angMin + angInc;
     pos = 1;
+    %% Recogemos los datos cercanos al eje x por el lado trasero derecho del robot
     while(a<(cantRayos+1))
         
             X = cos(angulo)*dist(pos);

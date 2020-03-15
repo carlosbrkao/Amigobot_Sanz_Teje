@@ -13,11 +13,12 @@ end
 pos = odom.LatestMessage.Pose.Pose.Position;
 rot = odom.LatestMessage.Pose.Pose.Orientation;
 
-%%CALCULO DE LA ROTACION
+%% CALCULO DE LA ROTACION(Resultado en radianes)
 quaternion=[rot.W rot.X rot.Y rot.Z];
 euler=quat2eul(quaternion,'ZYX');
 rotacion=euler(1);
 
+%% Mostramos la posicion en la que se encuentra el robot
 disp("POSICON DEL ROBOT:");
 disp("   EJE X: "+pos.X);
 disp("   EJE Y: "+pos.Y);
