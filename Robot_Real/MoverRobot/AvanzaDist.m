@@ -1,5 +1,5 @@
 %% Función para ordenar al robot que se desplace una distancia facilitada por parámetros a una velocidad
-%% también prefijada por parámetros
+% también prefijada por parámetros
 function AvanzaDist(Vel,distancia)
 
     %% DECLARACIÓN DE SUBSCRIBERS

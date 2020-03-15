@@ -1,7 +1,9 @@
-openfig('ruidoLaserSimulacion.fig','invisible'); 
+%% ABRIMOS LA GRAFICA CON LAS MEDIDAS Y GUARDAMOS LAS MISMAS EN UN ARRAY
+openfig('1000_laser_real.fig','invisible'); 
 Datos = get(gca,'Children');
 Muestras = get(Datos,'XData');
 
+%% CANTIDAD DE MUESTRAS
 cantMuestras = length(Muestras);
 
 
@@ -10,9 +12,12 @@ media = 0;
 MuestrasRuido = 0;
 ruidos = zeros(1,cantMuestras);
 
+
+
+%% Calculamos la diferencia de las medidas con la medida que deberia ser(2 m) 
 a =1;
 while(a<(cantMuestras+1))
-    if((Muestras(a))>2)
+    if((Muestras(a))>-2)
         ruido = (Muestras(a)+2);
         ruidos(a)=ruido;
     else
@@ -22,22 +27,24 @@ while(a<(cantMuestras+1))
     a = a+1;
 end
 
+%% Calculamos el ruido medio y maximo gracias al array de ruidos que hemos creado
 a = 1;
 while(a<(cantMuestras+1))
     if(ruidos(a)>0 && ruidos(a)<1)
         if(ruidos(a)>max)
             max = ruidos(a);
-        end;
+        end
         media = media + ruidos(a);
         MuestrasRuido = MuestrasRuido + 1;
     end
     a = a + 1;   
 end
-disp(media);
+media = media/MuestrasRuido;
 disp("El valor maximo del ruido es: " + max + "m");
 disp("El valor medio del ruido es: " + media + "m");
 
 
+%% Caluclamos la varianza del ruido mediante el array que hemos creado
 sumatorio = 0;
 a=1;
 varianza = 0;
