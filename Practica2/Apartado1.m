@@ -1,6 +1,6 @@
 %% INICIALIZACIÓN DE ROS (COMPLETAR ESPACIOS CON LAS DIRECCIONES IP)
-setenv('ROS_MASTER_URI','http://192.168.1.35:11311');
-setenv('ROS_IP','192.168.1.38');
+setenv('ROS_MASTER_URI','http://192.168.1.38:11311');
+setenv('ROS_IP','192.168.1.36');
 rosinit() % Inicialización de ROS en la IP correspondiente
 
 
@@ -31,43 +31,47 @@ umbral_angulo = 0.01;
 %% Bucle de control infinito
 while (1)
 
-%% Obtenemos la posición y orientación actuales
-pos=odom.LatestMessage.Pose.Pose.Position;
-ori=odom.LatestMessage.Pose.Pose.Orientation;
-yaw=quat2eul([ori.W ori.X ori.Y ori.Z]);
-yaw=yaw(1);
+    %% Obtenemos la posición y orientación actuales
+    pos=odom.LatestMessage.Pose.Pose.Position;
+    ori=odom.LatestMessage.Pose.Pose.Orientation;
+    yaw=quat2eul([ori.W ori.X ori.Y ori.Z]);
+    yaw=yaw(1);
 
-%% Calculamos el error de distancia
+    %% Calculamos el error de distancia
 
-Edist = sqrt((pos.X-xDestino)^2+(pos.Y-yDestino)^2);
-disp("EDIST");
-disp(Edist);
+    Edist = sqrt((pos.X-xDestino)^2+(pos.Y-yDestino)^2);
+    disp("EDIST");
+    disp(Edist);
 
-%% Calculamos el error de orientación
+    %% Calculamos el error de orientación
 
-Eori = atan2((yDestino-pos.Y),(xDestino-pos.X))-yaw;
-disp("EORI");
-disp(Eori);
+    Eori = atan2((yDestino-pos.Y),(xDestino-pos.X))-yaw;
+    disp("EORI");
+    disp(Eori);
 
-%% Calculamos las consignas de velocidades
-consigna_vel_linear = 0.1 * Edist;
-consigna_vel_ang = 0.3 * Eori;
-%% Condición de parada
-if (Edist<umbral_distancia) && (abs(Eori)<umbral_angulo)
-    disp("FIN");
- break;
-end
-%% Aplicamos consignas de control
-msg_vel.Linear.X= consigna_vel_linear;
-msg_vel.Linear.Y=0;
-msg_vel.Linear.Z=0;
-msg_vel.Angular.X=0;
-msg_vel.Angular.Y=0;
-msg_vel.Angular.Z= consigna_vel_ang;
-% Comando de velocidad
-send(pub,msg_vel);
-% Temporización del bucle según el parámetro establecido en r
-waitfor(r);
+    %% Calculamos las consignas de velocidades
+    consigna_vel_linear = 0.1 * Edist;
+    consigna_vel_ang = 0.3 * Eori;
+    %% Condición de parada
+    if (Edist<umbral_distancia) && (abs(Eori)<umbral_angulo)
+        %Una vez llegamos al punto, paramos el robot
+        msg_vel.Linear.X= 0;
+        msg_vel.Angular.Z= 0;
+        send(pub,msg_vel);
+        disp("FIN");
+        break;
+    end
+    %% Aplicamos consignas de control
+    msg_vel.Linear.X= consigna_vel_linear;
+    msg_vel.Linear.Y=0;
+    msg_vel.Linear.Z=0;
+    msg_vel.Angular.X=0;
+    msg_vel.Angular.Y=0;
+    msg_vel.Angular.Z= consigna_vel_ang;
+    % Comando de velocidad
+    send(pub,msg_vel);
+    % Temporización del bucle según el parámetro establecido en r
+    waitfor(r);
 end
 %% DESCONEXIÓN DE ROS
 rosshutdown;
