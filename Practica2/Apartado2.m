@@ -50,17 +50,21 @@ while (1)
         dist = 5;
     end
     
+    %d = [num2str(i),'-',num2str(dist)];
+    d = [num2str(dist)];
+    disp (d);
+    
     % CALCULAMOS EL ERROR DE DISTANCIA Y ORIENTACIÓN
     if(distav == 0)
         Eori = 0;
     else
         Eori =  atan((dist-lastdist)/distav);
     end
-    disp("EORI");
-    disp(Eori);
+%     disp("EORI");
+%     disp(Eori);
     Edist = (dist + 0.105)*cos(Eori) - distP;
-    disp("EDIST");
-    disp(Edist);
+%     disp("EDIST");
+%     disp(Edist);
     
     medidas(1,i) = dist;
     medidas(2,i) = lastdist; % Valor anterior de distancia
@@ -70,7 +74,7 @@ while (1)
     
     % CALCULAMOS LAS CONSIGNAS DE VELOCIDADES
     consigna_vel_linear = 0.3;
-    consigna_vel_ang = 0.2*Eori + 0.2*Edist;
+    consigna_vel_ang = 0.4*Eori + 0.5*Edist;
     
     % CONDICIÓN DE PARADA
     if(Edist < 0.01) && (Eori < 0.01)
@@ -95,6 +99,15 @@ while (1)
     waitfor(r);
     
     if i == MAX_TIME
+        % Paramos robot
+        msg_vel.Linear.X= 0;
+        msg_vel.Linear.Y=0;
+        msg_vel.Linear.Z=0;
+        msg_vel.Angular.X=0;
+        msg_vel.Angular.Y=0;
+        msg_vel.Angular.Z= 0;
+        % COMANDO DE VELOCIDAD
+        send(pub,msg_vel);
         break;
     end
     save('medidas.mat','medidas');

@@ -17,7 +17,7 @@ r = robotics.Rate(10);
 waitfor(r);
 %% Nos aseguramos recibir un mensaje relacionado con el robot
 while (strcmp(odom.LatestMessage.ChildFrameId,'robot0')~=1)
-odom.LatestMessage
+    odom.LatestMessage;
 end
 %% Inicializamos variables para el control
 i = 0;
@@ -36,6 +36,8 @@ while (1)
     %% Calculamos la distancia avanzada y medimos la distancia a la pared
     distav = sqrt((pos.X - lastpos.X)^2+(pos.Y - lastpos.Y)^2);
     dist = sonar0.LatestMessage.Range_;
+    d = [num2str(i),'-',num2str(dist)]
+    disp (d);
     if dist>5
     dist = 5;
     end
@@ -45,11 +47,11 @@ while (1)
     else
         Eori =  atan((dist-lastdist)/distav);
     end
-    disp("EORI");
-    disp(Eori);
+%     disp("EORI");
+%     disp(Eori);
     Edist = (dist + 0.105)*cos(Eori) - distP;
-    disp("EDIST");
-    disp(Edist);
+%     disp("EDIST");
+%     disp(Edist);
     
     medidas(1,i)= dist;
     medidas(2,i)= lastdist; %% valor anterior de distancia
