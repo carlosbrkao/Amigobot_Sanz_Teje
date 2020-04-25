@@ -1,6 +1,6 @@
 %% INICIALIZACIÓN DE ROS (COMPLETAR ESPACIOS CON LAS DIRECCIONES IP)
 setenv('ROS_MASTER_URI','http://192.168.1.40:11311');
-setenv('ROS_IP','192.168.1.38');
+setenv('ROS_IP','192.168.1.36');
 rosinit() % Inicialización de ROS en la IP correspondiente
 
 %% DECLARACIÓN DE VARIABLES NECESARIAS PARA EL CONTROL
@@ -33,7 +33,10 @@ lastpos = pos;
 lastdist = dist;
 lastdistav = 0;
 distP = 2; % Distancia a mantener con la pared
-
+%-------------------------------------------------------------cosas mias
+maxEori = 0;
+maxEdist = 0;
+%----------------------------------------------------------------------
 %% BUCLE DE CONTROL
 while (1)
     i = i + 1;
@@ -51,8 +54,7 @@ while (1)
     end
     
     %d = [num2str(i),'-',num2str(dist)];
-    d = [num2str(dist)];
-    disp (d);
+    
     
     % CALCULAMOS EL ERROR DE DISTANCIA Y ORIENTACIÓN
     if(distav == 0)
@@ -60,11 +62,18 @@ while (1)
     else
         Eori =  atan((dist-lastdist)/distav);
     end
-%     disp("EORI");
-%     disp(Eori);
     Edist = (dist + 0.105)*cos(Eori) - distP;
-%     disp("EDIST");
-%     disp(Edist);
+    
+    
+%     d = [num2str(dist),'- EORI: ',num2str(Eori),'- EDIST: ',num2str(Edist),'- EORIm: :',num2str(maxEori),'- EDISTm: ',num2str(maxEdist)];%-------------------------------------------------------------------PANTALLA
+%     disp (d);
+    disp(num2str(dist));
+    if(maxEdist < Edist) 
+        maxEdist = Edist;
+    end
+    if(maxEori < Eori)
+        maxEori = Eori;
+    end
     
     medidas(1,i) = dist;
     medidas(2,i) = lastdist; % Valor anterior de distancia
@@ -74,8 +83,7 @@ while (1)
     
     % CALCULAMOS LAS CONSIGNAS DE VELOCIDADES
     consigna_vel_linear = 0.3;
-    consigna_vel_ang = 0.4*Eori + 0.5*Edist;
-    
+    consigna_vel_ang = 0.3*Eori + 0.6*Edist;
     % CONDICIÓN DE PARADA
     if(Edist < 0.01) && (Eori < 0.01)
         %break;
