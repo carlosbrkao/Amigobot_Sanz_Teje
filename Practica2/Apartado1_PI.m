@@ -26,9 +26,13 @@ end
 
 %% Umbrales para condiciones de parada del robot
 umbral_distancia = 0.1;
-umbral_angulo = 0.0001;
+
+umbral_angulo = 0.000001;
+umbral_angulo_i = 1;
 
 %% Bucle de control infinito
+
+error_acumulado_a=0;
 while (1)
 
     %% Obtenemos la posición y orientación actuales
@@ -38,7 +42,7 @@ while (1)
     yaw=yaw(1);
 
     %% Calculamos el error de distancia
-
+    
     Edist = sqrt((pos.X-xDestino)^2+(pos.Y-yDestino)^2);
     disp("EDIST");
     disp(Edist);
@@ -50,8 +54,15 @@ while (1)
     disp(Eori);
 
     %% Calculamos las consignas de velocidades
-    consigna_vel_linear = 0.2 * Edist;
-    consigna_vel_ang = 0.6 * Eori;
+        consigna_vel_linear = 0.2 * Edist;
+    
+    if (abs(Eori)<umbral_angulo_i)
+        error_acumulado_a = error_acumulado_a+Eori;
+        consigna_vel_ang = 0.6 * Eori + error_acumulado_a * 0.1;
+    else
+          consigna_vel_ang = 0.6 * Eori;
+    end
+  
     %% Condición de parada
     if (Edist<umbral_distancia) && (abs(Eori)<umbral_angulo)
         %Una vez llegamos al punto, paramos el robot
