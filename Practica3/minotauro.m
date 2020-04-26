@@ -26,7 +26,7 @@
         odom.LatestMessage
     end
     % Comprobación láser
-    while (strcmp(laser_1.LatestMessage.Header.FrameId,'robot0_laser_1')~=1)
+    while (strcmp(laser.LatestMessage.Header.FrameId,'robot0_laser_1')~=1)
         laser.LatestMessage
     end
     % Comprobación sonares
@@ -67,12 +67,33 @@ while(1)
         pos = odom.LatestMessage.Pose.Pose.Position;
         rot = odom.LatestMessage.Pose.Pose.Orientation;
     % ANALISIS CASILLA
-    
+        casilla = detectorCasilla();
+        disp(num2str(casilla));
+        posiblesRutas = gps(casilla);
     % TOMA DE DECISIÓN DE RUTA A SEGUIR
-    
+        ruta = monedaAlAire(posiblesRutas);
+        disp(num2str(ruta));
+        %% Calculo de la rotación antes de comprobar datos de sensores
+            quaternion=[rot.W rot.X rot.Y rot.Z];
+            euler=quat2eul(quaternion,'ZYX');
+            rotacion=euler(1);
+            disp(num2str(rotacion));
+        switch ruta
+            case 1
+                angulo = ((180*rotacion)/pi) + 0;
+            case 2
+                angulo = ((180*rotacion)/pi) - 90;
+            case 3
+                angulo = ((180*rotacion)/pi) + 180;
+            case 4
+                angulo = ((180*rotacion)/pi) + 90;
+        end
     % MOVEMOS EL ROBOT
         % Giro para encauzar al robot a la ruta a seguir
             giro(velocidad_angular, angulo);
         % Cuando el robot esta orientado hacía el nuevo rumbo, avanzamos
             avanza(velocidad_lineal, avance); 
 end
+
+%% DESCONECTAMOS
+rosshutdown;

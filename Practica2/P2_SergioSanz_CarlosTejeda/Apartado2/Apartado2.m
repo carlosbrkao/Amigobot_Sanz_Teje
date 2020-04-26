@@ -33,10 +33,6 @@ lastpos = pos;
 lastdist = dist;
 lastdistav = 0;
 distP = 2; % Distancia a mantener con la pared
-%-------------------------------------------------------------cosas mias
-maxEori = 0;
-maxEdist = 0;
-%----------------------------------------------------------------------
 %% BUCLE DE CONTROL
 while (1)
     i = i + 1;
@@ -53,21 +49,14 @@ while (1)
         dist = 5;
     end
     
-    %d = [num2str(i),'-',num2str(dist)];
-    
-    
     % CALCULAMOS EL ERROR DE DISTANCIA Y ORIENTACIÓN
     if(distav == 0)
         Eori = 0;
     else
         Eori =  atan((dist-lastdist)/distav);
     end
+    
     Edist = (dist + 0.105)*cos(Eori) - distP;
-    
-    
-%     d = [num2str(dist),'- EORI: ',num2str(Eori),'- EDIST: ',num2str(Edist),'- EORIm: :',num2str(maxEori),'- EDISTm: ',num2str(maxEdist)];%-------------------------------------------------------------------PANTALLA
-%     disp (d);
-    disp(num2str(dist));
     if(maxEdist < Edist) 
         maxEdist = Edist;
     end

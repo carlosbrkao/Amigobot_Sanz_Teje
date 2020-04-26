@@ -5,7 +5,7 @@ function casilla = detectorCasilla()
     laser = rossubscriber('/robot0/laser_1');  %%Subcribimos al láser
 % COMPROBACIÓN
     pause(2);
-    while (strcmp(laser_1.LatestMessage.Header.FrameId,'robot0_laser_1')~=1)
+    while (strcmp(laser.LatestMessage.Header.FrameId,'robot0_laser_1')~=1)
         laser.LatestMessage
     end
 %% DATOS DE CONTROL

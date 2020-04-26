@@ -1,4 +1,4 @@
-function avanza(vel,dist)
+function avanza(vel,distancia)
 
 %% DECLARACIÓN DE SUBSCRIBERS Y PUBLISHERS
 % SUBSCRIBER
