@@ -65,11 +65,11 @@ end
 if(angulo == 90)
     % Derecha libre
     if(mapa(casillaY,casillaX+1)== 2) 
-        rutas(1,2) = 1;%Dcha
+        rutas(1,2);%Dcha
     end
     if(casillaX < columnas)
         if(mapa(casillaY,casillaX+2)== 0) 
-            rutas(2,2) = 1;%Dcha
+            rutas(2,2);%Dcha
         end
     end
     % Recto libre
@@ -177,6 +177,6 @@ if(angulo == -90)
     end
 end
 disp('---------RUTAS--------');
-disp([num2str(rutas(1,1)),'-',num2str(rutas(1,2)),'-',num2str(rutas(1,3)),'-',num2str(rutas(1,4))]);
-disp([num2str(rutas(2,1)),'-',num2str(rutas(2,2)),'-',num2str(rutas(2,3)),'-',num2str(rutas(2,4))]);
+disp(num2str(rutas(1,1)),,);
+disp(rutas(2));
 disp('----------------------');

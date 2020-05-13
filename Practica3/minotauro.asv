@@ -1,7 +1,7 @@
 %% CONEXIÓN
 % CONECTAMOS CON LA MV
     setenv('ROS_MASTER_URI','http://192.168.1.40:11311');
-    setenv('ROS_IP','192.168.1.34');
+    setenv('ROS_IP','192.168.1.35');
     rosinit() % Inicialización de ROS en la IP correspondiente
 
 %% INICIALIZACIÓN DE SUSBSCRIBERS Y PUBLISHERS
@@ -75,6 +75,9 @@ avance = 2; % Distancia que recorrera el robot en cada iteración
 velocidad_angular = 0.1;    % Velocidad angular fija (no cambiar)
 velocidad_lineal = 0.1;     % Velocidad lineal fija (no cambiar)
 % Orientación inicial
+quaternion=[rot.W rot.X rot.Y rot.Z];
+euler=quat2eul(quaternion,'ZYX');
+orientacion_inicio = euler(1);
 %% BUCLE
 while(1)
     % INFORMACIÓN ACTUAL
@@ -89,7 +92,7 @@ while(1)
         casilla = detectorCasilla();
         disp(num2str(casilla));
         mapa = actualizaMapa(mapa,casilla,pos,rotacion,filas,columnas);
-        posiblesRutas = gps(mapa,pos,rotacion,filas,columnas);
+        posiblesRutas = gps(mapa,pos,rotacion);
     % TOMA DE DECISIÓN DE RUTA A SEGUIR
         ruta = monedaAlAire(posiblesRutas);
         disp(num2str(ruta));
