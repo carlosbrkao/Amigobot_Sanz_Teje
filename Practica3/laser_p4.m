@@ -2,7 +2,7 @@
 %% trasero del robot.
 function pared = laser_p4(angMin,angInc,cuarto,dist)
     %% Variables
-    cantRayos = 20; %Franja de rayos a medir
+    cantRayos = 10; %Franja de rayos a medir
     tolerancia = 0.01; % Tolerancia en metros a la hora de medir
     posiblesErrores = 4; % Medidas erroneas permitidas
     distanciaMax = 2;%Distancia maxima a una pared en m
