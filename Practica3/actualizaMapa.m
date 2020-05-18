@@ -1,28 +1,11 @@
 %% MÉTODO PARA LA ACTUALIZACIÓN DEL MAPA
-function mapa = actualizaMapa(mapa,casilla,pos,rotacion,filas,columnas)
+function mapa = actualizaMapa(mapa,casilla,pos,filas,columnas,angulo)
 
 % Obtenemos las coordenadas de la casilla actual
 casillaX = round(pos.X) + 1;
 casillaY = round(pos.Y) + 1;
 % Marcamos como mapeada la casilla
 mapa(casillaY,casillaX) = 1;
-% Conversión de radianes a grados
-angulos = [0,90,180,-90];
-angulo = round((rotacion * 180)/pi);
-for i = 1:4
-    if(i == 3)
-       if((abs(angulo) - angulos(i))<5 && (abs(angulo) - angulos(i)>-5))  
-           angulo = angulos(i);
-           i = 4; 
-       end     
-    else
-       if((angulo - angulos(i))<5 && (angulo - angulos(i)>-5))  
-           angulo = angulos(i);
-           i = 4; 
-       end
-    end
-end
-disp(['ANGULO: ',num2str(angulo)]);
 % Actualización de paredes
 aux_paredes = [2,2,2,2]; % pared frente robot / pared dcha robot / pared atrás robot / pared izq robot
     % Frente robot

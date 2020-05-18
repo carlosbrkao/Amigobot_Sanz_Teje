@@ -1,4 +1,4 @@
-function rutas = gps(mapa,pos,rotacion,filas,columnas)
+function rutas = gps(mapa,pos,filas,columnas,angulo)
 
 %% A PARTIR DEL TIPO DE CASILLAS INTERPRETAMOS LOS CAMINOS POSIBLES
 %   [RECTO / DERECHA / ATRAS / IZQUIERDA]
@@ -6,23 +6,6 @@ rutas = zeros(2,4);
 % Obtenemos las coordenadas de la casilla actual
 casillaX = round(pos.X) + 1;
 casillaY = round(pos.Y) + 1;
-% Conversión de radianes a grados
-angulos = [0,90,180,-90];
-angulo = round((rotacion * 180)/pi);
-for i = 1:4
-    if(i == 3)
-       if((abs(angulo) - angulos(i))<5 && (abs(angulo) - angulos(i)>-5))  
-           angulo = angulos(i);
-           i = 4; 
-       end     
-    else
-       if((angulo - angulos(i))<5 && (angulo - angulos(i)>-5))  
-           angulo = angulos(i);
-           i = 4; 
-       end
-    end
-end
-disp(['ANGULO: ',num2str(angulo)]);
 % Estudio del mapa
 if(angulo == 0)%-----------------------------------------------------------
     % Recto libre

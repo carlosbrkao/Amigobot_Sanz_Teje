@@ -75,8 +75,8 @@ for i = 1:2:filas + 1
 end
 %% VARIABLES FIJAS
 avance = 2; % Distancia que recorrera el robot en cada iteración    
-velocidad_angular = 0.1;    % Velocidad angular fija (no cambiar)
-velocidad_lineal = 0.3;     % Velocidad lineal fija (no cambiar)
+velocidad_angular = 1;    % Velocidad angular fija (no cambiar)
+% velocidad_lineal = 0.3;     % Velocidad lineal fija (no cambiar)
 % Orientación inicial
 %% BUCLE
 while(1)
@@ -88,15 +88,16 @@ while(1)
         quaternion=[rot.W rot.X rot.Y rot.Z];
         euler=quat2eul(quaternion,'ZYX');
         rotacion=euler(1);
+        angulo = redondeoAngulos(rotacion);
     % ANALISIS CASILLA
         casilla = detectorCasilla();
         disp(num2str(casilla));
-        mapa = actualizaMapa(mapa,casilla,pos,rotacion,filas,columnas);
+        mapa = actualizaMapa(mapa,casilla,pos,rotacion,filas,columnas,angulo);
         mapeado = horaDeSalir(mapa,filas,columnas);
         if(mapeado)
             disp('EL MAPA HA SIDO MAPEADO POR COMPLETO');
         end
-        posiblesRutas = gps(mapa,pos,rotacion,filas,columnas);
+        posiblesRutas = gps(mapa,pos,rotacion,filas,columnas,angulo);
         if(luzAlFinalDelTunel(posiblesRutas))
             salidaX = round(pos.X) + 1;
             salidaY = round(pos.Y) + 1;
@@ -104,7 +105,6 @@ while(1)
         disp(['Casilla salida: ',num2str(salidaY),':',num2str(salidaX)]);   
     % MOVIMIENTO
         if(mapeado)
-            pos = odom.LatestMessage.Pose.Pose.Position;
             rutaSalida = quieroSalir(mapa,filas,columnas,salidaY,salidaX,round(pos.Y)+1,round(pos.X)+1,[round(pos.Y)+1;round(pos.X)+1],[salidaY;salidaX],1,1)
             disp(rutaSalida);
         else
@@ -114,9 +114,9 @@ while(1)
             dist = laser.LatestMessage.Ranges;        %Array de distancias
             angulo_min = laser.LatestMessage.AngleMin;%Angulo minimo en rad
 
-            p1 = laser_p1(angulo_min,inc,cuarto,dist);
-            p2 = laser_p2(angulo_min,inc,cuarto,dist);
-            p3 = laser_p3(angulo_min,inc,cuarto,dist); 
+            p1 = laser_p1(angulo_min,inc,cuarto,dist); %izq
+            p2 = laser_p2(angulo_min,inc,cuarto,dist); %centro
+            p3 = laser_p3(angulo_min,inc,cuarto,dist); %dcha
 
             disp(p1);
             disp(p2);
@@ -124,17 +124,64 @@ while(1)
             % DECODIFICADOR
             %if(pos.X>14)
             if(luzAlFinalDelTunel(posiblesRutas))
-                p1 = 1;
+                if(angulo == 0)
+                    if((round(pos.X) + 3) > columnas+1)%recto
+                        p2 = 1;
+                    end
+                    if((round(pos.Y) + 3) > filas+1)
+                        p1 = 1;
+                    end
+%                     if((round(pos.X) - 3)<0)
+%                     end
+                    if((round(pos.Y) - 3) < 0)
+                        p3 = 1;
+                    end
+                elseif(angulo == 90)
+                    if((round(pos.X) + 3) > columnas+1)
+                        p3 = 1;
+                    end
+                    if((round(pos.Y) + 3) > filas+1)
+                        p2 = 1;
+                    end
+                    if((round(pos.X) - 3)<0)
+                        p1 = 1;
+                    end
+%                     if((round(pos.Y) - 3) < 0)
+%                     end
+                elseif(angulo == 180)
+%                     if((round(pos.X) + 3) > columnas+1)
+%                     end
+                    if((round(pos.Y) + 3) > filas+1)
+                        p3 = 1;
+                    end
+                    if((round(pos.X) - 3)<0)
+                        p2 = 1;
+                    end
+                    if((round(pos.Y) - 3) < 0)
+                        p1 = 1;
+                    end
+                elseif(angulo == -90)
+                    if((round(pos.X) + 3) > columnas+1)
+                        p1 = 1;
+                    end
+%                     if((round(pos.Y) + 3) > filas+1)
+%                     end
+                    if((round(pos.X) - 3)<0)
+                        p3 = 1;
+                    end
+                    if((round(pos.Y) - 3) < 0)
+                        p2 = 1;
+                    end
+                end
             end
             if(~p1)&&(p2)&&(p3)
-                giro(velocidad_angular, 90);
+                avanza(pub,odom,90);%+90
             elseif(p1)&&(p2)&&(p3)
-                giro(velocidad_angular, 180);
-            elseif(~p1)&&(p3) 
-
+                avanza(pub,odom,180);%+180
+            elseif(~p1)&&(p3)
+                avanza(pub,odom,0);%+0
             elseif(~p3)
-                 giro(velocidad_angular, -90);
-
+                 avanza(pub,odom,-90);% -90
             end
            %avanza(velocidad_lineal, avance);
            avanza();
