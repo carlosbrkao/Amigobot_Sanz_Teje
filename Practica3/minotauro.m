@@ -105,8 +105,8 @@ while(1)
         disp(['Casilla salida: ',num2str(salidaY),':',num2str(salidaX)]);   
     % MOVIMIENTO
         if(mapeado)
-            rutaSalida = quieroSalir(mapa,filas,columnas,salidaY,salidaX,round(pos.Y)+1,round(pos.X)+1,[round(pos.Y)+1;round(pos.X)+1],[salidaY;salidaX],1,1)
-            disp(rutaSalida);
+            rutaSalida = quieroSalir(mapa,filas,columnas,salidaY,salidaX,round(pos.Y)+1,round(pos.X)+1,[salidaY;salidaX],[salidaY;salidaX],1,1);
+            
         else
             cuarto = 100;
             format long 

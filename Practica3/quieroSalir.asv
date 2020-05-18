@@ -8,68 +8,56 @@ r1j = 0;
 r1i = 0;
 if ((mapa(auxY+1,auxX) == 2) && (auxY+2 < filas))
     for z = 1:j
-        if ~((nulos(1,z) == auxY+2) && (nulos(2,z) == auxX))
+        if ~((nulos(1,j) == auxY+2) && (nulos(2,j) == auxX))
             r1j = 1;
         end
     end
     for z = 1:i
-        if ~((ruta(1,z) == auxY+2) && (ruta(2,z) == auxX))
-            r1i = 1;
+        if ~((nulos(1,i) == auxY+2) && (nulos(2,i) == auxX))
+            rutas(1) = 1;
         end
-    end
-    if(r1j && r1i)
-        rutas(1) = 1;
     end
 end
 r2j = 0;
 r2i = 0;
 if ((mapa(auxY,auxX+1) == 2) && (auxX+2 < columnas))
     for z = 1:j
-        if ~((nulos(1,z) == auxY) && (nulos(2,z) == auxX+2))
+        if ~((nulos(1,j) == auxY) && (nulos(2,j) == auxX+2))
             r2j = 1;
         end
     end
     for z = 1:i
-        if ~((ruta(1,z) == auxY) && (ruta(2,z) == auxX+2))
-            r2i = 1;
+        if ~((nulos(1,i) == auxY) && (nulos(2,i) == auxX+2))
+            rutas(2) = 1;
         end
-    end
-    if(r2j && r2i)
-        rutas(2) = 1;
     end
 end
 r3j = 0;
 r3i = 0;
 if ((mapa(auxY-1,auxX) == 2) && (auxY-2 > 0))
     for z = 1:j
-        if ~((nulos(1,z) == auxY-2) && (nulos(2,z) == auxX))
-            r3j = 1;
+        if ~((nulos(1,j) == auxY-2) && (nulos(2,j) == auxX))
+            rutas(3) = 1;
         end
     end
     for z = 1:i
-        if ~((ruta(1,z) == auxY-2) && (ruta(2,z) == auxX))
-            r3i = 1;
+        if ~((nulos(1,i) == auxY-2) && (nulos(2,i) == auxX))
+            rutas(3) = 1;
         end
-    end
-    if(r3j && r3i)
-        rutas(3) = 1;
     end
 end
 r4j = 0;
 r4i = 0;
 if ((mapa(auxY,auxX-1) == 2) && (auxX-2 > 0))
     for z = 1:j
-        if ~((nulos(1,z) == auxY) && (nulos(2,z) == auxX-2))
-            r4j = 1;
+        if ~((nulos(1,j) == auxY) && (nulos(2,j) == auxX-2))
+            rutas(4) = 1;
         end
     end
     for z = 1:i
-        if ~((ruta(1,z) == auxY) && (ruta(2,z) == auxX-2))
-            r4i = 1;
+        if ~((nulos(1,i) == auxY) && (nulos(2,i) == auxX-2))
+            rutas(4) = 1;
         end
-    end
-    if(r4j && r4i)
-        rutas(4) = 1;
     end
 end
 % Elegimos ruta
