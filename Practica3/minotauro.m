@@ -1,35 +1,35 @@
-%% CONEXIÓN
+%% CONEXIï¿½N
 % CONECTAMOS CON LA MV
-    setenv('ROS_MASTER_URI','http://192.168.1.40:11311');
-    setenv('ROS_IP','192.168.1.36');
-    rosinit() % Inicialización de ROS en la IP correspondiente
+    setenv('ROS_MASTER_URI','http://192.168.1.37:11311');
+    setenv('ROS_IP','192.168.1.40');
+    rosinit() % Inicializaciï¿½n de ROS en la IP correspondiente
 
-%% INICIALIZACIÓN DE SUSBSCRIBERS Y PUBLISHERS
-% DECLARACIÓN DE SUBSCRIBERS
-    odom = rossubscriber('/robot0/odom');       % Subscripción a la odometría
-    laser = rossubscriber('/robot0/laser_1');   % Subscripción al láser
-    s0=rossubscriber('/robot0/sonar_0');        % Subcsripción al sonar_0
-    s1=rossubscriber('/robot0/sonar_1');        % Subcsripción al sonar_1
-    s2=rossubscriber('/robot0/sonar_2');        % Subcsripción al sonar_2
-    s3=rossubscriber('/robot0/sonar_3');        % Subcsripción al sonar_3
-    s4=rossubscriber('/robot0/sonar_4');        % Subcsripción al sonar_4
-    s5=rossubscriber('/robot0/sonar_5');        % Subcsripción al sonar_5
-    s6=rossubscriber('/robot0/sonar_6');        % Subcsripción al sonar_6
-    s7=rossubscriber('/robot0/sonar_7');        % Subcsripción al sonar_7
-% DECLARACIÓN DE PUBLISHERS
+%% INICIALIZACIï¿½N DE SUSBSCRIBERS Y PUBLISHERS
+% DECLARACIï¿½N DE SUBSCRIBERS
+    odom = rossubscriber('/robot0/odom');       % Subscripciï¿½n a la odometrï¿½a
+    laser = rossubscriber('/robot0/laser_1');   % Subscripciï¿½n al lï¿½ser
+    s0=rossubscriber('/robot0/sonar_0');        % Subcsripciï¿½n al sonar_0
+    s1=rossubscriber('/robot0/sonar_1');        % Subcsripciï¿½n al sonar_1
+    s2=rossubscriber('/robot0/sonar_2');        % Subcsripciï¿½n al sonar_2
+    s3=rossubscriber('/robot0/sonar_3');        % Subcsripciï¿½n al sonar_3
+    s4=rossubscriber('/robot0/sonar_4');        % Subcsripciï¿½n al sonar_4
+    s5=rossubscriber('/robot0/sonar_5');        % Subcsripciï¿½n al sonar_5
+    s6=rossubscriber('/robot0/sonar_6');        % Subcsripciï¿½n al sonar_6
+    s7=rossubscriber('/robot0/sonar_7');        % Subcsripciï¿½n al sonar_7
+% DECLARACIï¿½N DE PUBLISHERS
     pub = rospublisher('/robot0/cmd_vel', 'geometry_msgs/Twist'); % Publisher para comunicar velocidad
     msg_vel = rosmessage(pub); % Creamos un mensaje del tipo declarado en "pub" (geometry_msgs/Twist)
-% COMPROBACIÓN DE INICIALIZACIÓN COMPLETADA
+% COMPROBACIï¿½N DE INICIALIZACIï¿½N COMPLETADA
     pause(2);
-    % Comprobación odometría
+    % Comprobaciï¿½n odometrï¿½a
     while (strcmp(odom.LatestMessage.ChildFrameId,'robot0')~=1)
         odom.LatestMessage
     end
-    % Comprobación láser
+    % Comprobaciï¿½n lï¿½ser
     while (strcmp(laser.LatestMessage.Header.FrameId,'robot0_laser_1')~=1)
         laser.LatestMessage
     end
-    % Comprobación sonares
+    % Comprobaciï¿½n sonares
     while (strcmp(s0.LatestMessage.Header.FrameId,'robot0_sonar_0')~=1)
         s0.LatestMessage
     end
@@ -74,23 +74,23 @@ for i = 1:2:filas + 1
     end
 end
 %% VARIABLES FIJAS
-avance = 2; % Distancia que recorrera el robot en cada iteración    
+avance = 2; % Distancia que recorrera el robot en cada iteraciï¿½n    
 velocidad_angular = 1;    % Velocidad angular fija (no cambiar)
 % velocidad_lineal = 0.3;     % Velocidad lineal fija (no cambiar)
-% Orientación inicial
+% Orientaciï¿½n inicial
 %% BUCLE
 while(1)
-    % INFORMACIÓN ACTUAL
+    % INFORMACIï¿½N ACTUAL
         pos = odom.LatestMessage.Pose.Pose.Position;
         %disp (['X: ',num2str(pos.X),' Y: ',num2str(pos.Y)]);
         rot = odom.LatestMessage.Pose.Pose.Orientation;
-        % Calculo de ángulo
+        % Calculo de ï¿½ngulo
         quaternion=[rot.W rot.X rot.Y rot.Z];
         euler=quat2eul(quaternion,'ZYX');
         rotacion=euler(1);
         angulo = redondeoAngulos(rotacion);
     % ANALISIS CASILLA
-        casilla = detectorCasilla();
+        casilla = detectorCasilla(laser);
         disp(num2str(casilla));
         mapa = actualizaMapa(mapa,casilla,pos,filas,columnas,angulo);
         mapeado = horaDeSalir(mapa,filas,columnas);
@@ -106,83 +106,9 @@ while(1)
     % MOVIMIENTO
         if(mapeado)
             rutaSalida = quieroSalir(mapa,filas,columnas,salidaY,salidaX,round(pos.Y)+1,round(pos.X)+1,[salidaY;salidaX],[salidaY;salidaX],1,1);
-            
         else
-            cuarto = 100;
-            format long 
-            inc = laser.LatestMessage.AngleIncrement; %Incremento del angulo en cada rayo
-            dist = laser.LatestMessage.Ranges;        %Array de distancias
-            angulo_min = laser.LatestMessage.AngleMin;%Angulo minimo en rad
-
-            p1 = laser_p1(angulo_min,inc,cuarto,dist); %izq
-            p2 = laser_p2(angulo_min,inc,cuarto,dist); %centro
-            p3 = laser_p3(angulo_min,inc,cuarto,dist); %dcha
-
-            disp(p1);
-            disp(p2);
-            disp(p3);
-            % DECODIFICADOR
-            %if(pos.X>14)
-            if(luzAlFinalDelTunel(posiblesRutas))
-                if(angulo == 0)
-                    if((round(pos.X) + 3) > columnas+1)
-                        p2 = 1;
-                    end
-                    if((round(pos.Y) + 3) > filas+1)
-                        p1 = 1;
-                    end
-%                     if((round(pos.X) - 3)<0)
-%                     end
-                    if((round(pos.Y) - 3) < 0)
-                        p3 = 1;
-                    end
-                elseif(angulo == 90)
-                    if((round(pos.X) + 3) > columnas+1)
-                        p3 = 1;
-                    end
-                    if((round(pos.Y) + 3) > filas+1)
-                        p2 = 1;
-                    end
-                    if((round(pos.X) - 3)<0)
-                        p1 = 1;
-                    end
-%                     if((round(pos.Y) - 3) < 0)
-%                     end
-                elseif(angulo == 180)
-%                     if((round(pos.X) + 3) > columnas+1)
-%                     end
-                    if((round(pos.Y) + 3) > filas+1)
-                        p3 = 1;
-                    end
-                    if((round(pos.X) - 3)<0)
-                        p2 = 1;
-                    end
-                    if((round(pos.Y) - 3) < 0)
-                        p1 = 1;
-                    end
-                elseif(angulo == -90)
-                    if((round(pos.X) + 3) > columnas+1)
-                        p1 = 1;
-                    end
-%                     if((round(pos.Y) + 3) > filas+1)
-%                     end
-                    if((round(pos.X) - 3)<0)
-                        p3 = 1;
-                    end
-                    if((round(pos.Y) - 3) < 0)
-                        p2 = 1;
-                    end
-                end
-            end
-            if(~p1)&&(p2)&&(p3)
-                avanza(pub,odom,90);%+90
-            elseif(p1)&&(p2)&&(p3)
-                avanza(pub,odom,180);%+180
-            elseif(~p2)&&(p3)
-                avanza(pub,odom,0);%+0
-            elseif(~p3)
-                 avanza(pub,odom,-90);% -90
-            end
+            casilla = siempreDerecha(laser,angulo,odom,posiblesRutas,filas,columnas);
+            avanza(pub,odom,casilla(1),casilla(2));
         end            
 end
 %% DESCONECTAMOS
