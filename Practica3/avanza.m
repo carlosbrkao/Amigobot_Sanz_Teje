@@ -10,10 +10,10 @@ msg_vel=rosmessage(pub); %% Creamos un mensaje del tipo declarado en "pub" (geom
 %% Definimos la perodicidad del bucle (10 hz)
 r = robotics.Rate(10);
 waitfor(r);
-
+pause(2);
 %% Nos aseguramos recibir un mensaje relacionado con el robot
 while (strcmp(odom.LatestMessage.ChildFrameId,'robot0')~=1)
- odom.LatestMessage
+     odom.LatestMessage
 end
 
 

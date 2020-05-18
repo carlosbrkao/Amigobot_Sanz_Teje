@@ -75,8 +75,8 @@ for i = 1:2:filas + 1
 end
 %% VARIABLES FIJAS
 avance = 2; % Distancia que recorrera el robot en cada iteración    
-velocidad_angular = 1;    % Velocidad angular fija (no cambiar)
-%velocidad_lineal = 0.3;     % Velocidad lineal fija (no cambiar)
+velocidad_angular = 0.1;    % Velocidad angular fija (no cambiar)
+velocidad_lineal = 0.3;     % Velocidad lineal fija (no cambiar)
 % Orientación inicial
 %% BUCLE
 while(1)
@@ -124,7 +124,7 @@ while(1)
             % DECODIFICADOR
             %if(pos.X>14)
             if(luzAlFinalDelTunel(posiblesRutas))
-                p2 = 1;
+                p1 = 1;
             end
             if(~p1)&&(p2)&&(p3)
                 giro(velocidad_angular, 90);

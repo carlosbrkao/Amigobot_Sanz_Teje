@@ -6,35 +6,35 @@ rutas = zeros(4); % INDICE: CASIILLA SUP / CASILLA DCHA / CASILLA INF / CASILLA 
 % Comprobamos rutas
 if ((mapa(auxY+1,auxX) == 2) && (auxY+2 < filas))
     for z = 1:j
-        if (~(nulos(1,j) == auxY+2) && ~(nulos(2,j) == auxX))
+        if ~((nulos(1,j) == auxY+2) && (nulos(2,j) == auxX))
             rutas(1) = 1;
         end
     end
 end
 if ((mapa(auxY,auxX+1) == 2) && (auxX+2 < columnas))
     for z = 1:j
-        if (~(nulos(1,j) == auxY) && ~(nulos(2,j) == auxX+2))
+        if ~((nulos(1,j) == auxY) && (nulos(2,j) == auxX+2))
             rutas(2) = 1;
         end
     end
 end
 if ((mapa(auxY-1,auxX) == 2) && (auxY-2 > 0))
     for z = 1:j
-        if (~(nulos(1,j) == auxY-2) && ~(nulos(2,j) == auxX))
+        if ~((nulos(1,j) == auxY-2) && (nulos(2,j) == auxX))
             rutas(3) = 1;
         end
     end
 end
 if ((mapa(auxY,auxX-1) == 2) && (auxX-2 > 0))
     for z = 1:j
-        if (~(nulos(1,j) == auxY) && ~(nulos(2,j) == auxX-2))
+        if ~((nulos(1,j) == auxY) && (nulos(2,j) == auxX-2))
             rutas(4) = 1;
         end
     end
 end
 % SALIDA-------------------------------------------------------------------
 disp (['BUSCANDO... i:',num2str(i),' j:',num2str(j)]);
-disp([num2str(rutas(1),'-',num2str(rutas(2),'-',num2str(rutas(3),'-',num2str(rutas(4)]);
+disp([num2str(rutas(1)),'-',num2str(rutas(2)),'-',num2str(rutas(3)),'-',num2str(rutas(4))]);
 %--------------------------------------------------------------------------
 % Elegimos ruta
 decision = 0;
@@ -81,7 +81,8 @@ switch decision
 end
 % Comprobamos si hemos acabado ruta
 if((inicioY == auxY) && (inicioX == auxX))
+    rutaSalida = ruta;
 % En caso contrario continuamos buscando
 else
-    rutaSalida = quieroSalir(mapa,filas,columnas,X,X,inicioY,inicioX,ruta,nulos,i,j);
+    rutaSalida = quieroSalir(mapa,filas,columnas,auxY,auxX,inicioY,inicioX,ruta,nulos,i,j);
 end
