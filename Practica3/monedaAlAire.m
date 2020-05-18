@@ -1,6 +1,9 @@
+%% FUNCIÓN PARA SELECCIONAR LA RUTA A PODER SEGUIR
+
 function decision = monedaAlAire(opciones)
 
-%% SELECCIÓN DE CAMINO
+% INDICE: CAMINO NULO = 0 / CAMINO POSIBLE = 1 / POSIBLE SALIDA = 2
+         
 libre = false;
 control = true;
 for i = 1:4
@@ -8,6 +11,7 @@ for i = 1:4
         libre = true;
         control = false;
     end
+    
 end
 % Buscando camino hacia casilla sin visitar
 while libre
