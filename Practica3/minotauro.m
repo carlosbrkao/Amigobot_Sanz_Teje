@@ -1,7 +1,7 @@
 %% CONEXIÓN
 % CONECTAMOS CON LA MV
-    setenv('ROS_MASTER_URI','http://192.168.1.37:11311');
-    setenv('ROS_IP','192.168.1.40');
+    setenv('ROS_MASTER_URI','http://192.168.1.40:11311');
+    setenv('ROS_IP','192.168.1.36');
     rosinit() % Inicialización de ROS en la IP correspondiente
 
 %% INICIALIZACIÓN DE SUSBSCRIBERS Y PUBLISHERS
@@ -59,6 +59,9 @@
 filas = 6; % En metros
 columnas = 14; % En metros
 mapa = zeros(filas + 1, columnas + 1); % 0 = no visitada // 1 = visitada // 2 = libre // 3 = pared
+salidaX = 0;
+salidaY = 0;
+mapeado = false;
 % Inicializamos todas las paredes como huecos
 for i = 1:2:columnas + 1
     for j = 1:filas + 1
@@ -73,13 +76,13 @@ end
 %% VARIABLES FIJAS
 avance = 2; % Distancia que recorrera el robot en cada iteración    
 velocidad_angular = 0.1;    % Velocidad angular fija (no cambiar)
-velocidad_lineal = 0.5;     % Velocidad lineal fija (no cambiar)
+velocidad_lineal = 0.3;     % Velocidad lineal fija (no cambiar)
 % Orientación inicial
 %% BUCLE
 while(1)
     % INFORMACIÓN ACTUAL
         pos = odom.LatestMessage.Pose.Pose.Position;
-        disp (['X: ',num2str(pos.X),' Y: ',num2str(pos.Y)]);
+        %disp (['X: ',num2str(pos.X),' Y: ',num2str(pos.Y)]);
         rot = odom.LatestMessage.Pose.Pose.Orientation;
         % Calculo de ángulo
         quaternion=[rot.W rot.X rot.Y rot.Z];
@@ -89,101 +92,54 @@ while(1)
         casilla = detectorCasilla();
         disp(num2str(casilla));
         mapa = actualizaMapa(mapa,casilla,pos,rotacion,filas,columnas);
+        mapeado = horaDeSalir(mapa,filas,columnas);
+        if(horaDeSalir(mapa,filas,columnas))
+            disp('EL MAPA HA SIDO MAPEADO POR COMPLETO');
+        end
         posiblesRutas = gps(mapa,pos,rotacion,filas,columnas);
-    % TOMA DE DECISIÓN DE RUTA A SEGUIR
-        %%ruta = monedaAlAire(posiblesRutas);
-        %%Al goritmo derecha.
-        
-        
-        
-%         disp(num2str(ruta));
-%         %% Calculo de la rotación antes de comprobar datos de sensores
-%             disp(['ORIENTACIÓN: ',num2str((rotacion * 180)/pi)]);
-%         switch ruta
-%             case 1
-%                 angulo = 0;
-% %                 angulo = ((180*rotacion)/pi) + 0;
-%             case 2
-%                 angulo = -90;
-% %                 angulo = ((180*rotacion)/pi) - 90;
-%             case 3
-%                 angulo = 180;
-% %                 angulo = ((180*rotacion)/pi) + 180;
-%             case 4
-%                 angulo = 90;
-% %                 angulo = ((180*rotacion)/pi) + 90;
-%         end
+        if(luzAlFinalDelTunel(posiblesRutas))
+            salidaX = round(pos.X) + 1;
+            salidaY = round(pos.Y) + 1;
+        end
+        disp(['Casilla salida: ',num2str(salidaY),':',num2str(salidaX)]);   
+    % MOVIMIENTO
+        if(horaDeSalir(mapa,filas,columnas))
+            pos = odom.LatestMessage.Pose.Pose.Position;
+            rutaSalida = quieroSalir(mapa,filas,columnas,salidaY,salidaX,round(pos.Y)+1,round(pos.X)+1,[round(pos.Y)+1;round(pos.X)+1],[salidaY;salidaX],1,1)
+            disp(rutaSalida);
+        else
+            cuarto = 100;
+            format long 
+            inc = laser.LatestMessage.AngleIncrement; %Incremento del angulo en cada rayo
+            dist = laser.LatestMessage.Ranges;        %Array de distancias
+            angulo_min = laser.LatestMessage.AngleMin;%Angulo minimo en rad
 
-   %---------------------------------------------------------------------------------
-    
-   %%Comprobar giro
-%     format long 
-%     inc = laser.LatestMessage.AngleIncrement; %Incremento del angulo en cada rayo
-%     dist = laser.LatestMessage.Ranges;        %Array de distancias
-%     angulo_min = laser.LatestMessage.AngleMin;%Angulo minimo en rad
-% 
-%     cuarto = 400/4;
-%     %% DETECTOR DE PARED
-%     p3 = laser_p3(angulo_min,inc,cuarto,dist);
-%     p2 = laser_p2(angulo_min,inc,cuarto,dist);
-%     p1 = laser_p1(angulo_min,inc,cuarto,dist);
-%     p4 = laser_p4(angulo_min,inc,cuarto,dist);
-%    if(~p3)
-%        giro(velocidad_angular, -90);
-%    else
-%        if(p2)
-%             if(p1)
-%                 giro(velocidad_angular, 180);
-%             else
-%                 giro(velocidad_angular, 90);
-%             end
-%        
-%        else
-%            if(~p1)&&(~p2)&&(~p3)&&(~p4)
-%                 disp("SALIDA");
-%                 giro(velocidad_angular, 180);
-%            end
-%        end
-%    end      
-    
-    cuarto = 100;
-    format long 
-    inc = laser.LatestMessage.AngleIncrement; %Incremento del angulo en cada rayo
-    dist = laser.LatestMessage.Ranges;        %Array de distancias
-    angulo_min = laser.LatestMessage.AngleMin;%Angulo minimo en rad
+            p1 = laser_p1(angulo_min,inc,cuarto,dist);
+            p2 = laser_p2(angulo_min,inc,cuarto,dist);
+            p3 = laser_p3(angulo_min,inc,cuarto,dist); 
 
-    p1 = laser_p1(angulo_min,inc,cuarto,dist);
-    p2 = laser_p2(angulo_min,inc,cuarto,dist);
-    p3 = laser_p3(angulo_min,inc,cuarto,dist); 
-    
-    disp(p1);
-    disp(p2);
-    disp(p3);
-%% DECODIFICADOR
-    if(pos.X>14)
-        disp("SALIDA")
-        giro(velocidad_angular, 180);
-    elseif(~p1)&&(p2)&&(p3)
-        giro(velocidad_angular, 90);
-    elseif(p1)&&(p2)&&(p3)
-        giro(velocidad_angular, 180);
-    elseif(~p1)&&(p3) 
-       
-    elseif(~p3)
-         giro(velocidad_angular, -90);
-   
-    end
+            disp(p1);
+            disp(p2);
+            disp(p3);
+            % DECODIFICADOR
+            %if(pos.X>14)
+            if(luzAlFinalDelTunel(posiblesRutas))
+                %disp("SALIDA")
+                giro(velocidad_angular, 180);
+            elseif(~p1)&&(p2)&&(p3)
+                giro(velocidad_angular, 90);
+            elseif(p1)&&(p2)&&(p3)
+                giro(velocidad_angular, 180);
+            elseif(~p1)&&(p3) 
 
-        
-   avanza(velocidad_lineal, avance);
-    %--------------------------------------------------------------------------------
+            elseif(~p3)
+                 giro(velocidad_angular, -90);
 
-%     % MOVEMOS EL ROBOT
-%         % Giro para encauzar al robot a la ruta a seguir
-%             giro(velocidad_angular, angulo);
-%         % Cuando el robot esta orientado hacía el nuevo rumbo, avanzamos
-%             
+            end
+
+
+           avanza(velocidad_lineal, avance);
+        end            
 end
-
 %% DESCONECTAMOS
 rosshutdown;
