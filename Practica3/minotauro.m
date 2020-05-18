@@ -76,10 +76,11 @@ end
 %% VARIABLES FIJAS
 avance = 2; % Distancia que recorrera el robot en cada iteraci�n    
 velocidad_angular = 1;    % Velocidad angular fija (no cambiar)
+control = true;
 % velocidad_lineal = 0.3;     % Velocidad lineal fija (no cambiar)
 % Orientaci�n inicial
 %% BUCLE
-while(1)
+while(control)
     % INFORMACI�N ACTUAL
         pos = odom.LatestMessage.Pose.Pose.Position;
         %disp (['X: ',num2str(pos.X),' Y: ',num2str(pos.Y)]);
@@ -105,7 +106,13 @@ while(1)
         disp(['Casilla salida: ',num2str(salidaY),':',num2str(salidaX)]);   
     % MOVIMIENTO
         if(mapeado)
+            control = false;
             rutaSalida = quieroSalir(mapa,filas,columnas,salidaY,salidaX,round(pos.Y)+1,round(pos.X)+1,[salidaY;salidaX],[salidaY;salidaX],1,1);
+            tamanno = size(rutaSalida);
+            for i = tamanno(2)-1:-1:1
+                disp([num2str(rutaSalida(1,i)),':',num2str(rutaSalida(2,i))]);
+                avanza(pub,odom,rutaSalida(2,i)-1,rutaSalida(1,i)-1);
+            end
         else
             casilla = siempreDerecha(laser,angulo,odom,posiblesRutas,filas,columnas);
             avanza(pub,odom,casilla(1),casilla(2));

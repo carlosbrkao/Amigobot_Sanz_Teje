@@ -5,71 +5,71 @@ function rutaSalida = quieroSalir(mapa,filas,columnas,auxY,auxX,inicioY,inicioX,
 rutas = zeros(4); % INDICE: CASIILLA SUP / CASILLA DCHA / CASILLA INF / CASILLA IZQ
                   % NO CAMINO = 0 / CAMINO = 1 / CAMINO NULO = 2
 % Comprobamos rutas
-r1j = 0;
-r1i = 0;
-if ((mapa(auxY+1,auxX) == 2) && (auxY+2 < filas))
+r1j = true;
+r1i = true;
+if ((mapa(auxY+1,auxX) == 2) && (auxY+2 < filas+1))
     for z = 1:j
-        if ~((nulos(1,z) == auxY+2) && (nulos(2,z) == auxX))
-            r1j = 1;
+        if ((nulos(1,z) == auxY+2) && (nulos(2,z) == auxX))
+            r1j = false;
         end
     end
     for z = 1:i
-        if ~((ruta(1,z) == auxY+2) && (ruta(2,z) == auxX))
-            r1i = 1;
+        if ((ruta(1,z) == auxY+2) && (ruta(2,z) == auxX))
+            r1i = false;
         end
     end
-    if(r1j && r1i)
+    if(r1j) && (r1i)
         rutas(1) = 1;
     end
 end
-r2j = 0;
-r2i = 0;
-if ((mapa(auxY,auxX+1) == 2) && (auxX+2 < columnas))
+r2j = true;
+r2i = true;
+if ((mapa(auxY,auxX+1) == 2) && (auxX+2 < columnas+1))
     for z = 1:j
-        if ~((nulos(1,z) == auxY) && (nulos(2,z) == auxX+2))
-            r2j = 1;
+        if ((nulos(1,z) == auxY) && (nulos(2,z) == auxX+2))
+            r2j = false;
         end
     end
     for z = 1:i
-        if ~((ruta(1,z) == auxY) && (ruta(2,z) == auxX+2))
-            r2i = 1;
+        if ((ruta(1,z) == auxY) && (ruta(2,z) == auxX+2))
+            r2i = false;
         end
     end
-    if(r2j && r2i)
+    if(r2j) && (r2i)
         rutas(2) = 1;
     end
 end
-r3j = 0;
-r3i = 0;
+r3j = true;
+r3i = true;
 if ((mapa(auxY-1,auxX) == 2) && (auxY-2 > 0))
     for z = 1:j
-        if ~((nulos(1,z) == auxY-2) && (nulos(2,z) == auxX))
-            r3j = 1;
+        if ((nulos(1,z) == auxY-2) && (nulos(2,z) == auxX))
+            r3j = false;
         end
     end
     for z = 1:i
-        if ~((ruta(1,z) == auxY-2) && (ruta(2,z) == auxX))
-            r3i = 1;
+        if ((ruta(1,z) == auxY-2) && (ruta(2,z) == auxX))
+            r3i = false;
         end
     end
-    if(r3j && r3i)
+    if(r3j) && (r3i)
         rutas(3) = 1;
     end
 end
-r4j = 0;
-r4i = 0;
+r4j = true;
+r4i = true;
 if ((mapa(auxY,auxX-1) == 2) && (auxX-2 > 0))
     for z = 1:j
-        if ~((nulos(1,z) == auxY) && (nulos(2,z) == auxX-2))
-            r4j = 1;
+        if ((nulos(1,z) == auxY) && (nulos(2,z) == auxX-2))
+            r4j = false;
         end
     end
     for z = 1:i
-        if ~((ruta(1,z) == auxY) && (ruta(2,z) == auxX-2))
-            r4i = 1;
+        if ((ruta(1,z) == auxY) && (ruta(2,z) == auxX-2))
+            r4i = false;
         end
     end
-    if(r4j && r4i)
+    if(r4j) && (r4i)
         rutas(4) = 1;
     end
 end
@@ -121,13 +121,18 @@ switch decision
 end
 % SALIDA-------------------------------------------------------------------
 disp (['BUSCANDO... i:',num2str(i),' j:',num2str(j)]);
-disp([num2str(auxY),':',num2str(auxX)]);
 disp([num2str(rutas(1)),'-',num2str(rutas(2)),'-',num2str(rutas(3)),'-',num2str(rutas(4))]);
+disp([num2str(auxY),':',num2str(auxX)]);
 
 %--------------------------------------------------------------------------
 % Comprobamos si hemos acabado ruta
 if((inicioY == auxY) && (inicioX == auxX))
-    rutaSalida = ruta;
+    rutaAux = zeros(2,i);
+    for z = 1:i
+        rutaAux(1,z) = ruta(1,z);
+        rutaAux(2,z) = ruta(2,z);
+    end
+    rutaSalida = rutaAux;
 % En caso contrario continuamos buscando
 else
     rutaSalida = quieroSalir(mapa,filas,columnas,auxY,auxX,inicioY,inicioX,ruta,nulos,i,j);
