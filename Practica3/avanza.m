@@ -27,7 +27,7 @@ while (1)
     
     Eori = atan2((yDestino-pos.Y),(xDestino-pos.X))-yaw;
     
-    disp("ERROR ORIENTACION " + Eori);
+%     disp("ERROR ORIENTACION " + Eori);
     
     
     %%Correccion de giro ineficiente
@@ -79,7 +79,7 @@ while (1)
     Edist = sqrt((pos.X-xDestino)^2+(pos.Y-yDestino)^2);
     
     %% Calculamos las consignas de velocidades
-    consigna_vel_linear = 4 * Edist;
+    consigna_vel_linear = 1 * Edist;%-------------------------Estaba a 4
 
     if(consigna_vel_linear>1)
         consigna_vel_linear = 1;

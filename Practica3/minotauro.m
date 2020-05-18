@@ -1,7 +1,7 @@
 %% CONEXI�N
 % CONECTAMOS CON LA MV
-    setenv('ROS_MASTER_URI','http://192.168.1.37:11311');
-    setenv('ROS_IP','192.168.1.40');
+    setenv('ROS_MASTER_URI','http://192.168.1.40:11311');
+    setenv('ROS_IP','192.168.1.36');
     rosinit() % Inicializaci�n de ROS en la IP correspondiente
 
 %% INICIALIZACI�N DE SUSBSCRIBERS Y PUBLISHERS

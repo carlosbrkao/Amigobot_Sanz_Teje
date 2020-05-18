@@ -3,6 +3,7 @@
 function rutaSalida = quieroSalir(mapa,filas,columnas,auxY,auxX,inicioY,inicioX,ruta,nulos,i,j)
 
 rutas = zeros(4); % INDICE: CASIILLA SUP / CASILLA DCHA / CASILLA INF / CASILLA IZQ
+                  % NO CAMINO = 0 / CAMINO = 1 / CAMINO NULO = 2
 % Comprobamos rutas
 r1j = 0;
 r1i = 0;
@@ -125,8 +126,7 @@ disp([num2str(rutas(1)),'-',num2str(rutas(2)),'-',num2str(rutas(3)),'-',num2str(
 
 %--------------------------------------------------------------------------
 % Comprobamos si hemos acabado ruta
-%if((inicioY == auxY) && (inicioX == auxX))
-if(i > 30) 
+if((inicioY == auxY) && (inicioX == auxX))
     rutaSalida = ruta;
 % En caso contrario continuamos buscando
 else
