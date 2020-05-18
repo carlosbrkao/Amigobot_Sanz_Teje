@@ -1,4 +1,4 @@
-function avanza(pub,odom,giro)
+function avanza(pub,odom,xDestino,yDestino)
 
 
 %% DECLARACIÓN DE MENSAGE
@@ -8,65 +8,7 @@ msg_vel=rosmessage(pub); %% Creamos un mensaje del tipo declarado en "pub" (geom
 r = robotics.Rate(10);
 
 
-
-%% Calculo de destino
-    pos=odom.LatestMessage.Pose.Pose.Position;
-    % Obtenemos las coordenadas de la casilla actua
-    casillaX = round(pos.X);
-    casillaY = round(pos.Y);
-    
-    ori=odom.LatestMessage.Pose.Pose.Orientation;
-    yaw=quat2eul([ori.W ori.X ori.Y ori.Z]);
-    yaw=yaw(1);
-    
-    angulos = [0,90,180,-90];
-    angulo = round((yaw * 180)/pi);
-    angulo = angulo + giro;
-    
-    if(angulo>350) 
-        angulo = 0;
-    elseif(angulo>250) 
-        angulo = -90; 
-    elseif(angulo<-350)
-        angulo = 0;
-    elseif(angulo<-250)
-        angulo = 90;
-    end
-    
-    for i = 1:4
-        if(i == 3)
-           if((abs(angulo) - angulos(i))<5 && (abs(angulo) - angulos(i)>-5))  
-               angulo = angulos(i);
-               i = 4; 
-           end     
-        else
-           if((angulo - angulos(i))<5 && (angulo - angulos(i)>-5))  
-               angulo = angulos(i);
-               i = 4; 
-           end
-        end
-    end
-    
-    
-    
-    if(angulo == 0)
-        xDestino = casillaX + 2;
-        yDestino = casillaY;
-    elseif(angulo == 90)
-        xDestino = casillaX;
-        yDestino = casillaY+2;
-    elseif(angulo == 180)
-        xDestino = casillaX - 2;
-        yDestino = casillaY;
-    elseif(angulo == -90)
-        xDestino = casillaX;
-        yDestino = casillaY-2;
-    end
-    
-    disp("CASILLA X " + casillaX);
-    disp("CASILLA Y " + casillaY);
-    disp("DESTINO X " + xDestino);
-    disp("DESTINO Y " + yDestino);
+   
 
 %% Umbrales para condiciones de parada del robot
 umbral_distancia = 0.05;
@@ -84,20 +26,21 @@ while (1)
     %% Calculamos el error de orientación
     
     Eori = atan2((yDestino-pos.Y),(xDestino-pos.X))-yaw;
-        
-%     if(angulo == 180)
-%         Eori = 0;
-%         if((casillaX - pos.X) > 2)
-%             msg_vel.Linear.X = 0;
-%             msg_vel.Angular.Z = 0;
-%             send(pub,msg_vel);
-%             break;
-%         end
-%     end
+    
+    disp("ERROR ORIENTACION " + Eori);
     
     
+    %%Correccion de giro ineficiente
+    if(Eori < -4)
+        Eori = Eori * -1;
+        Eori = Eori - 3;
+    elseif(Eori > 4)
+        Eori = Eori * -1;
+        Eori = Eori + 3;
+    end
+         
     %% Calculamos las consignas de velocidades
-    consigna_vel_ang = 0.6 * Eori;
+    consigna_vel_ang = 1 * Eori;
     
     if(consigna_vel_ang >1)
         consigna_vel_ang=1;
@@ -136,7 +79,7 @@ while (1)
     Edist = sqrt((pos.X-xDestino)^2+(pos.Y-yDestino)^2);
     
     %% Calculamos las consignas de velocidades
-    consigna_vel_linear = 1 * Edist;
+    consigna_vel_linear = 4 * Edist;
 
     if(consigna_vel_linear>1)
         consigna_vel_linear = 1;
@@ -165,37 +108,6 @@ while (1)
     waitfor(r);
 end
 
-% while(1)
-% 
-%     ori=odom.LatestMessage.Pose.Pose.Orientation;
-%     yaw=quat2eul([ori.W ori.X ori.Y ori.Z]);
-%     yaw=yaw(1);
-%     
-%     
-%     error = controlAng - yaw;
-%     
-%     consigna_vel_ang = 0.5 * error;
-%      
-%     if (abs(error)<0.01)
-%         %Una vez llegamos al punto, paramos el robot
-%         msg_vel.Linear.X= 0;
-%         msg_vel.Angular.Z= 0;
-%         send(pub,msg_vel);
-%         break;
-%     end
-%     %% Aplicamos consignas de control
-%     msg_vel.Linear.X= 0;
-%     msg_vel.Linear.Y=0;
-%     msg_vel.Linear.Z=0;
-%     msg_vel.Angular.X=0;
-%     msg_vel.Angular.Y=0;
-%     msg_vel.Angular.Z= consigna_vel_ang;
-%     % Comando de velocidad
-%     send(pub,msg_vel);
-%     % Temporización del bucle según el parámetro establecido en r
-%     waitfor(r);
-%     
-% end
 
 
 

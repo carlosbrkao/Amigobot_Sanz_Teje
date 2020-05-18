@@ -1,13 +1,5 @@
-function casilla = detectorCasilla()
+function casilla = detectorCasilla(laser)
 
-%% DECLARACIÓN DE SUBSCRIBERS Y PUBLISHERS
-% SUBSCRIBER
-    laser = rossubscriber('/robot0/laser_1');  %%Subcribimos al láser
-% COMPROBACIÓN
-    pause(2);
-    while (strcmp(laser.LatestMessage.Header.FrameId,'robot0_laser_1')~=1)
-        laser.LatestMessage
-    end
 %% DATOS DE CONTROL
     rayos = 400; % cantidad de rayos del laser
 %% GENERACION DE DATOS Y ESTRUCTURAS NECESARIAS

@@ -1,7 +1,7 @@
 %% CONEXIÓN
 % CONECTAMOS CON LA MV
-    setenv('ROS_MASTER_URI','http://192.168.1.40:11311');
-    setenv('ROS_IP','192.168.1.36');
+    setenv('ROS_MASTER_URI','http://192.168.1.37:11311');
+    setenv('ROS_IP','192.168.1.40');
     rosinit() % Inicialización de ROS en la IP correspondiente
 
 %% INICIALIZACIÓN DE SUSBSCRIBERS Y PUBLISHERS
@@ -90,7 +90,7 @@ while(1)
         rotacion=euler(1);
         angulo = redondeoAngulos(rotacion);
     % ANALISIS CASILLA
-        casilla = detectorCasilla();
+        casilla = detectorCasilla(laser);
         disp(num2str(casilla));
         mapa = actualizaMapa(mapa,casilla,pos,filas,columnas,angulo);
         mapeado = horaDeSalir(mapa,filas,columnas);
@@ -105,84 +105,11 @@ while(1)
         disp(['Casilla salida: ',num2str(salidaY),':',num2str(salidaX)]);   
     % MOVIMIENTO
         if(mapeado)
-            rutaSalida = quieroSalir(mapa,filas,columnas,salidaY,salidaX,round(pos.Y)+1,round(pos.X)+1,[round(pos.Y)+1;round(pos.X)+1],[salidaY;salidaX],1,1)
+            rutaSalida = quieroSalir(mapa,filas,columnas,salidaY,salidaX,round(pos.Y)+1,round(pos.X)+1,[round(pos.Y)+1;round(pos.X)+1],[salidaY;salidaX],1,1);
             disp(rutaSalida);
         else
-            cuarto = 100;
-            format long 
-            inc = laser.LatestMessage.AngleIncrement; %Incremento del angulo en cada rayo
-            dist = laser.LatestMessage.Ranges;        %Array de distancias
-            angulo_min = laser.LatestMessage.AngleMin;%Angulo minimo en rad
-
-            p1 = laser_p1(angulo_min,inc,cuarto,dist); %izq
-            p2 = laser_p2(angulo_min,inc,cuarto,dist); %centro
-            p3 = laser_p3(angulo_min,inc,cuarto,dist); %dcha
-
-            disp(p1);
-            disp(p2);
-            disp(p3);
-            % DECODIFICADOR
-            %if(pos.X>14)
-            if(luzAlFinalDelTunel(posiblesRutas))
-                if(angulo == 0)
-                    if((round(pos.X) + 3) > columnas+1)
-                        p2 = 1;
-                    end
-                    if((round(pos.Y) + 3) > filas+1)
-                        p1 = 1;
-                    end
-%                     if((round(pos.X) - 3)<0)
-%                     end
-                    if((round(pos.Y) - 3) < 0)
-                        p3 = 1;
-                    end
-                elseif(angulo == 90)
-                    if((round(pos.X) + 3) > columnas+1)
-                        p3 = 1;
-                    end
-                    if((round(pos.Y) + 3) > filas+1)
-                        p2 = 1;
-                    end
-                    if((round(pos.X) - 3)<0)
-                        p1 = 1;
-                    end
-%                     if((round(pos.Y) - 3) < 0)
-%                     end
-                elseif(angulo == 180)
-%                     if((round(pos.X) + 3) > columnas+1)
-%                     end
-                    if((round(pos.Y) + 3) > filas+1)
-                        p3 = 1;
-                    end
-                    if((round(pos.X) - 3)<0)
-                        p2 = 1;
-                    end
-                    if((round(pos.Y) - 3) < 0)
-                        p1 = 1;
-                    end
-                elseif(angulo == -90)
-                    if((round(pos.X) + 3) > columnas+1)
-                        p1 = 1;
-                    end
-%                     if((round(pos.Y) + 3) > filas+1)
-%                     end
-                    if((round(pos.X) - 3)<0)
-                        p3 = 1;
-                    end
-                    if((round(pos.Y) - 3) < 0)
-                        p2 = 1;
-                    end
-                end
-            end
-            if(~p1)&&(p2)&&(p3)
-                avanza(pub,odom,90);%+90
-            elseif(p1)&&(p2)&&(p3)
-                avanza(pub,odom,180);%+180
-            elseif(~p2)&&(p3)
-                avanza(pub,odom,0);%+0
-            elseif(~p3)
-                 avanza(pub,odom,-90);% -90
-            end
+            casilla = siempreDerecha(laser,angulo,odom,posiblesRutas,filas,columnas);
+            avanza(pub,odom,casilla(1),casilla(2));
         end            
 end
 %% DESCONECTAMOS
