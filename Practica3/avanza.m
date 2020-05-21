@@ -79,7 +79,7 @@ while (1)
     Edist = sqrt((pos.X-xDestino)^2+(pos.Y-yDestino)^2);
     
     %% Calculamos las consignas de velocidades
-    consigna_vel_linear = 1 * Edist;%-------------------------Estaba a 4
+    consigna_vel_linear = 4 * Edist;%-------------------------Estaba a 4
 
     if(consigna_vel_linear>1)
         consigna_vel_linear = 1;
