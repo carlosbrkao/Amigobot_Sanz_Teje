@@ -1,4 +1,4 @@
-%%SiempreDerecha
+%% SiempreDerecha
 
 function casilla = siempreDerecha(laser,angulo,odom,posiblesRutas,filas,columnas)
 
@@ -23,8 +23,6 @@ function casilla = siempreDerecha(laser,angulo,odom,posiblesRutas,filas,columnas
                     if((round(pos.Y) + 3) > filas+1)
                         p1 = 1;
                     end
-%                     if((round(pos.X) - 3)<0)
-%                     end
                     if((round(pos.Y) - 3) < 0)
                         p3 = 1;
                     end
@@ -38,11 +36,7 @@ function casilla = siempreDerecha(laser,angulo,odom,posiblesRutas,filas,columnas
                     if((round(pos.X) - 3)<0)
                         p1 = 1;
                     end
-%                     if((round(pos.Y) - 3) < 0)
-%                     end
                 elseif(angulo == 180)
-%                     if((round(pos.X) + 3) > columnas+1)
-%                     end
                     if((round(pos.Y) + 3) > filas+1)
                         p3 = 1;
                     end
@@ -56,8 +50,6 @@ function casilla = siempreDerecha(laser,angulo,odom,posiblesRutas,filas,columnas
                     if((round(pos.X) + 3) > columnas+1)
                         p1 = 1;
                     end
-%                     if((round(pos.Y) + 3) > filas+1)
-%                     end
                     if((round(pos.X) - 3)<0)
                         p3 = 1;
                     end
@@ -76,12 +68,9 @@ function casilla = siempreDerecha(laser,angulo,odom,posiblesRutas,filas,columnas
                  giro = -90;% -90
             end
             
-
     % Obtenemos las coordenadas de la casilla actua
     casillaX = round(pos.X);
     casillaY = round(pos.Y);
-    
-%     disp("ANGULO ANTES MOD " + angulo);
     
     angulo = angulo + giro;
     
@@ -96,9 +85,6 @@ function casilla = siempreDerecha(laser,angulo,odom,posiblesRutas,filas,columnas
     elseif(angulo<-170)
         angulo = 180;
     end
-        
-    
-%     disp("ANGULO " + angulo); 
     
     if(angulo == 0)
         xDestino = casillaX + 2;
@@ -114,11 +100,6 @@ function casilla = siempreDerecha(laser,angulo,odom,posiblesRutas,filas,columnas
         yDestino = casillaY-2;
     end
     
-%      disp("CASILLA X " + casillaX);
-%      disp("CASILLA Y " + casillaY);
-%      disp("DESTINO X " + xDestino);
-%      disp("DESTINO Y " + yDestino);
-
     casilla = zeros(0,2);
     casilla(1) = xDestino;
     casilla(2) = yDestino;

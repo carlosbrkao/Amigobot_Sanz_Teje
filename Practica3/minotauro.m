@@ -6,16 +6,16 @@
 
 %% INICIALIZACION DE SUSBSCRIBERS Y PUBLISHERS
 % DECLARACION DE SUBSCRIBERS
-    odom = rossubscriber('/robot0/odom');       % Subscripciï¿½n a la odometrï¿½a
-    laser = rossubscriber('/robot0/laser_1');   % Subscripciï¿½n al lï¿½ser
-    s0=rossubscriber('/robot0/sonar_0');        % Subcsripciï¿½n al sonar_0
-    s1=rossubscriber('/robot0/sonar_1');        % Subcsripciï¿½n al sonar_1
-    s2=rossubscriber('/robot0/sonar_2');        % Subcsripciï¿½n al sonar_2
-    s3=rossubscriber('/robot0/sonar_3');        % Subcsripciï¿½n al sonar_3
-    s4=rossubscriber('/robot0/sonar_4');        % Subcsripciï¿½n al sonar_4
-    s5=rossubscriber('/robot0/sonar_5');        % Subcsripciï¿½n al sonar_5
-    s6=rossubscriber('/robot0/sonar_6');        % Subcsripciï¿½n al sonar_6
-    s7=rossubscriber('/robot0/sonar_7');        % Subcsripciï¿½n al sonar_7
+    odom = rossubscriber('/robot0/odom');       % Subscripcio½n a la odometrï¿½a
+    laser = rossubscriber('/robot0/laser_1');   % Subscripcion al lï¿½ser
+    s0=rossubscriber('/robot0/sonar_0');        % Subcsripcion al sonar_0
+    s1=rossubscriber('/robot0/sonar_1');        % Subcsripcion al sonar_1
+    s2=rossubscriber('/robot0/sonar_2');        % Subcsripcion al sonar_2
+    s3=rossubscriber('/robot0/sonar_3');        % Subcsripcion al sonar_3
+    s4=rossubscriber('/robot0/sonar_4');        % Subcsripcion al sonar_4
+    s5=rossubscriber('/robot0/sonar_5');        % Subcsripcion al sonar_5
+    s6=rossubscriber('/robot0/sonar_6');        % Subcsripcion al sonar_6
+    s7=rossubscriber('/robot0/sonar_7');        % Subcsripcion al sonar_7
 % DECLARACION DE PUBLISHERS
     pub = rospublisher('/robot0/cmd_vel', 'geometry_msgs/Twist'); % Publisher para comunicar velocidad
     msg_vel = rosmessage(pub); % Creamos un mensaje del tipo declarado en "pub" (geometry_msgs/Twist)
@@ -59,8 +59,6 @@
 filas = 6; % En metros
 columnas = 14; % En metros
 mapa = zeros(filas + 1, columnas + 1); % INDICE:  NO VISITADA = 0 / VISITADA = 1 / LIBRE(NO PARED) = 2 / PARED = 3
-% salidaX = 0;
-% salidaY = 0;
 mapeado = false; % Indica si el mapa ha sido muestreado
 % Inicializamos todas las paredes como huecos(libres)
 for i = 1:2:columnas + 1
@@ -115,29 +113,33 @@ while(control)
                 avanza(pub,odom,rutaSalida(2,i)-1,rutaSalida(1,i)-1);
             end
             % Sale del laberinto desde la casilla de la salida
-            pos = odom.LatestMessage.Pose.Pose.Position;
-            rot = odom.LatestMessage.Pose.Pose.Orientation;
-            quaternion=[rot.W rot.X rot.Y rot.Z];
-            euler=quat2eul(quaternion,'ZYX');
-            rotacion=euler(1);
-            angulo = redondeoAngulos(rotacion);
-            posiblesRutas = gps(mapa,pos,filas,columnas,angulo);
-            f = round(pos.Y);
-            c = round(pos.X);
-            for i = 1:4
-                if(posiblesRutas(1,i) == 1) && (posiblesRutas(2,i) == 2)
-                    switch (i)
-                        case 1
-                            avanza(pub,odom,c,f+1);
-                        case 2
-                            avanza(pub,odom,c+1,f);
-                        case 3
-                            avanza(pub,odom,c,f-1);
-                        otherwise
-                            avanza(pub,odom,c-1,f);
+                % Información actual
+                pos = odom.LatestMessage.Pose.Pose.Position;
+                rot = odom.LatestMessage.Pose.Pose.Orientation;
+                % Obtención de la orientación
+                quaternion=[rot.W rot.X rot.Y rot.Z];
+                euler=quat2eul(quaternion,'ZYX');
+                rotacion=euler(1);
+                angulo = redondeoAngulos(rotacion);
+                % Estudio de la casilla
+                posiblesRutas = gps(mapa,pos,filas,columnas,angulo);
+                f = round(pos.Y);
+                c = round(pos.X);
+                % Buscamos la salida y avanzamos por ella
+                for i = 1:4
+                    if(posiblesRutas(1,i) == 1) && (posiblesRutas(2,i) == 2)
+                        switch (i)
+                            case 1
+                                avanza(pub,odom,c,f+1);
+                            case 2
+                                avanza(pub,odom,c+1,f);
+                            case 3
+                                avanza(pub,odom,c,f-1);
+                            otherwise
+                                avanza(pub,odom,c-1,f);
+                        end
                     end
                 end
-            end
         % Desplazamiento a derecha mapeando el mapa
         else
             destino = siempreDerecha(laser,angulo,odom,posiblesRutas,filas,columnas);

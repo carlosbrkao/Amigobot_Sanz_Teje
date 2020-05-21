@@ -16,20 +16,13 @@ umbral_angulo = 0.01;
 %% Bucles de control infinito
 
 while (1)
-
     %% Obtenemos la posición y orientación actuales
     pos=odom.LatestMessage.Pose.Pose.Position;
     ori=odom.LatestMessage.Pose.Pose.Orientation;
     yaw=quat2eul([ori.W ori.X ori.Y ori.Z]);
     yaw=yaw(1);
-
     %% Calculamos el error de orientación
-    
     Eori = atan2((yDestino-pos.Y),(xDestino-pos.X))-yaw;
-    
-%     disp("ERROR ORIENTACION " + Eori);
-    
-    
     %%Correccion de giro ineficiente
     if(Eori < -4)
         Eori = Eori * -1;
@@ -45,8 +38,6 @@ while (1)
     if(consigna_vel_ang >1)
         consigna_vel_ang=1;
     end
-          
-    
     %% Condición de parada
     if (abs(Eori)<umbral_angulo)
         %Una vez llegamos al punto, paramos el robot
@@ -79,15 +70,11 @@ while (1)
     Edist = sqrt((pos.X-xDestino)^2+(pos.Y-yDestino)^2);
     
     %% Calculamos las consignas de velocidades
-    consigna_vel_linear = 1 * Edist;%-------------------------Estaba a 4
+    consigna_vel_linear = 4 * Edist;
 
     if(consigna_vel_linear>1)
         consigna_vel_linear = 1;
     end
-    
-
-    
-    
     %% Condición de parada
     if (Edist<umbral_distancia)
         %Una vez llegamos al punto, paramos el robot
