@@ -1,7 +1,7 @@
 function avanza(pub,odom,xDestino,yDestino)
 
 
-%% DECLARACIÓN DE MENSAGE
+%% DECLARACIï¿½N DE MENSAGE
 msg_vel=rosmessage(pub); %% Creamos un mensaje del tipo declarado en "pub" (geometry_msgs/Twist)
 
 %% Definimos la perodicidad del bucle (10 hz)
@@ -16,12 +16,12 @@ umbral_angulo = 0.01;
 %% Bucles de control infinito
 
 while (1)
-    %% Obtenemos la posición y orientación actuales
+    %% Obtenemos la posiciï¿½n y orientaciï¿½n actuales
     pos=odom.LatestMessage.Pose.Pose.Position;
     ori=odom.LatestMessage.Pose.Pose.Orientation;
     yaw=quat2eul([ori.W ori.X ori.Y ori.Z]);
     yaw=yaw(1);
-    %% Calculamos el error de orientación
+    %% Calculamos el error de orientaciï¿½n
     Eori = atan2((yDestino-pos.Y),(xDestino-pos.X))-yaw;
     %%Correccion de giro ineficiente
     if(Eori < -4)
@@ -38,7 +38,7 @@ while (1)
     if(consigna_vel_ang >1)
         consigna_vel_ang=1;
     end
-    %% Condición de parada
+    %% Condiciï¿½n de parada
     if (abs(Eori)<umbral_angulo)
         %Una vez llegamos al punto, paramos el robot
         msg_vel.Angular.Z= 0;
@@ -54,7 +54,7 @@ while (1)
     msg_vel.Angular.Z= consigna_vel_ang;
     % Comando de velocidad
     send(pub,msg_vel);
-    % Temporización del bucle según el parámetro establecido en r
+    % Temporizaciï¿½n del bucle segï¿½n el parï¿½metro establecido en r
     waitfor(r);
 end
 
@@ -62,7 +62,7 @@ end
 
 while (1)
 
-    %% Obtenemos la posición y orientación actuales
+    %% Obtenemos la posiciï¿½n y orientaciï¿½n actuales
     pos=odom.LatestMessage.Pose.Pose.Position;
 
     %% Calculamos el error de distancia
@@ -75,7 +75,7 @@ while (1)
     if(consigna_vel_linear>1)
         consigna_vel_linear = 1;
     end
-    %% Condición de parada
+    %% Condiciï¿½n de parada
     if (Edist<umbral_distancia)
         %Una vez llegamos al punto, paramos el robot
         msg_vel.Linear.X= 0;
@@ -91,7 +91,7 @@ while (1)
     msg_vel.Angular.Z= 0;
     % Comando de velocidad
     send(pub,msg_vel);
-    % Temporización del bucle según el parámetro establecido en r
+    % Temporizaciï¿½n del bucle segï¿½n el parï¿½metro establecido en r
     waitfor(r);
 end
 
