@@ -1,23 +1,21 @@
+%% FUNCIÓN PARA LA DETECCIÓN DEL TIPO DE CASILLA EN LA QUE NOS ENCONTRAMOS
 function casilla = detectorCasilla(laser)
 
-%% DATOS DE CONTROL
+% DATOS DE CONTROL
     rayos = 400; % cantidad de rayos del laser
-%% GENERACION DE DATOS Y ESTRUCTURAS NECESARIAS
-    datosX = zeros(1,rayos);
-    datosY = zeros(1,rayos);
-    
+% GENERACION DE DATOS Y ESTRUCTURAS NECESARIAS
     format long 
     inc = laser.LatestMessage.AngleIncrement; %Incremento del angulo en cada rayo
     dist = laser.LatestMessage.Ranges;        %Array de distancias
     angulo_min = laser.LatestMessage.AngleMin;%Angulo minimo en rad
 
     cuarto = rayos/4;
-%% DETECTORES DE PARED
+% DETECTORES DE PARED
     p1 = laser_p1(angulo_min,inc,cuarto,dist);
     p2 = laser_p2(angulo_min,inc,cuarto,dist);
     p3 = laser_p3(angulo_min,inc,cuarto,dist);
     p4 = laser_p4(angulo_min,inc,cuarto,dist);    
-%% DECODIFICADOR
+% DECODIFICADOR
     if(~p1)&&(~p2)&&(~p3)&&(~p4) 
         casilla = 0;
     elseif(~p1)&&(p2)&&(~p3)&&(~p4) 

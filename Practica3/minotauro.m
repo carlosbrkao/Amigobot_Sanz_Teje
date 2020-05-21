@@ -1,11 +1,11 @@
-%% CONEXIï¿½N
+%% CONEXION
 % CONECTAMOS CON LA MV
     setenv('ROS_MASTER_URI','http://192.168.1.40:11311');
-    setenv('ROS_IP','192.168.1.36');
+    setenv('ROS_IP','192.168.1.37');
     rosinit() % Inicializaciï¿½n de ROS en la IP correspondiente
 
-%% INICIALIZACIï¿½N DE SUSBSCRIBERS Y PUBLISHERS
-% DECLARACIï¿½N DE SUBSCRIBERS
+%% INICIALIZACION DE SUSBSCRIBERS Y PUBLISHERS
+% DECLARACION DE SUBSCRIBERS
     odom = rossubscriber('/robot0/odom');       % Subscripciï¿½n a la odometrï¿½a
     laser = rossubscriber('/robot0/laser_1');   % Subscripciï¿½n al lï¿½ser
     s0=rossubscriber('/robot0/sonar_0');        % Subcsripciï¿½n al sonar_0
@@ -16,20 +16,20 @@
     s5=rossubscriber('/robot0/sonar_5');        % Subcsripciï¿½n al sonar_5
     s6=rossubscriber('/robot0/sonar_6');        % Subcsripciï¿½n al sonar_6
     s7=rossubscriber('/robot0/sonar_7');        % Subcsripciï¿½n al sonar_7
-% DECLARACIï¿½N DE PUBLISHERS
+% DECLARACION DE PUBLISHERS
     pub = rospublisher('/robot0/cmd_vel', 'geometry_msgs/Twist'); % Publisher para comunicar velocidad
     msg_vel = rosmessage(pub); % Creamos un mensaje del tipo declarado en "pub" (geometry_msgs/Twist)
-% COMPROBACIï¿½N DE INICIALIZACIï¿½N COMPLETADA
+% COMPROBACION DE INICIALIZACIï¿½N COMPLETADA
     pause(2);
-    % Comprobaciï¿½n odometrï¿½a
+    % Comprobacion odometria
     while (strcmp(odom.LatestMessage.ChildFrameId,'robot0')~=1)
         odom.LatestMessage
     end
-    % Comprobaciï¿½n lï¿½ser
+    % Comprobacion laser
     while (strcmp(laser.LatestMessage.Header.FrameId,'robot0_laser_1')~=1)
         laser.LatestMessage
     end
-    % Comprobaciï¿½n sonares
+    % Comprobacion sonares
     while (strcmp(s0.LatestMessage.Header.FrameId,'robot0_sonar_0')~=1)
         s0.LatestMessage
     end
@@ -55,14 +55,14 @@
         s7.LatestMessage
     end
 %% VARIABLES
-% Mapa del tesoro
+% Mapa
 filas = 6; % En metros
 columnas = 14; % En metros
-mapa = zeros(filas + 1, columnas + 1); % 0 = no visitada // 1 = visitada // 2 = libre // 3 = pared
-salidaX = 0;
-salidaY = 0;
-mapeado = false;
-% Inicializamos todas las paredes como huecos
+mapa = zeros(filas + 1, columnas + 1); % INDICE:  NO VISITADA = 0 / VISITADA = 1 / LIBRE(NO PARED) = 2 / PARED = 3
+% salidaX = 0;
+% salidaY = 0;
+mapeado = false; % Indica si el mapa ha sido muestreado
+% Inicializamos todas las paredes como huecos(libres)
 for i = 1:2:columnas + 1
     for j = 1:filas + 1
         mapa(j,i) = 2;
@@ -73,49 +73,75 @@ for i = 1:2:filas + 1
         mapa(i,j) = 2;
     end
 end
-%% VARIABLES FIJAS
-avance = 2; % Distancia que recorrera el robot en cada iteraciï¿½n    
-velocidad_angular = 1;    % Velocidad angular fija (no cambiar)
+% Indica si estamos mapeando o hemos acabado
 control = true;
-% velocidad_lineal = 0.3;     % Velocidad lineal fija (no cambiar)
-% Orientaciï¿½n inicial
 %% BUCLE
 while(control)
-    % INFORMACIï¿½N ACTUAL
+    % INFORMACION ACTUAL
         pos = odom.LatestMessage.Pose.Pose.Position;
-        %disp (['X: ',num2str(pos.X),' Y: ',num2str(pos.Y)]);
         rot = odom.LatestMessage.Pose.Pose.Orientation;
-        % Calculo de ï¿½ngulo
+        % Calculo de angulo
         quaternion=[rot.W rot.X rot.Y rot.Z];
         euler=quat2eul(quaternion,'ZYX');
         rotacion=euler(1);
         angulo = redondeoAngulos(rotacion);
     % ANALISIS CASILLA
         casilla = detectorCasilla(laser);
-        disp(num2str(casilla));
+        % Concociendo la ubicación y el tipo de casilla registramos lo
+        % muestreado en el mapa
         mapa = actualizaMapa(mapa,casilla,pos,filas,columnas,angulo);
+        % Comprobación de si se ha mapeado el mapa
         mapeado = horaDeSalir(mapa,filas,columnas);
         if(mapeado)
             disp('EL MAPA HA SIDO MAPEADO POR COMPLETO');
+            disp(['CASILLA SALIDA: ',num2str(salidaY),':',num2str(salidaX)]); 
         end
+        % Estudio del entorno de la casilla 
         posiblesRutas = gps(mapa,pos,filas,columnas,angulo);
+        % En caso de ser la casilla de salida la registramos
         if(luzAlFinalDelTunel(posiblesRutas))
             salidaX = round(pos.X) + 1;
             salidaY = round(pos.Y) + 1;
         end
-        disp(['Casilla salida: ',num2str(salidaY),':',num2str(salidaX)]);   
     % MOVIMIENTO
+        % Salida del laberinto 
         if(mapeado)
             control = false;
+            % Busca ruta de salida
             rutaSalida = quieroSalir(mapa,filas,columnas,salidaY,salidaX,round(pos.Y)+1,round(pos.X)+1,[salidaY;salidaX],[salidaY;salidaX],1,1);
             tamanno = size(rutaSalida);
+            % Sigue la ruta hacía la casilla donde esta la salida
             for i = tamanno(2)-1:-1:1
-                disp([num2str(rutaSalida(1,i)),':',num2str(rutaSalida(2,i))]);
                 avanza(pub,odom,rutaSalida(2,i)-1,rutaSalida(1,i)-1);
             end
+            % Sale del laberinto desde la casilla de la salida
+            pos = odom.LatestMessage.Pose.Pose.Position;
+            rot = odom.LatestMessage.Pose.Pose.Orientation;
+            quaternion=[rot.W rot.X rot.Y rot.Z];
+            euler=quat2eul(quaternion,'ZYX');
+            rotacion=euler(1);
+            angulo = redondeoAngulos(rotacion);
+            posiblesRutas = gps(mapa,pos,filas,columnas,angulo);
+            f = round(pos.Y);
+            c = round(pos.X);
+            for i = 1:4
+                if(posiblesRutas(1,i) == 1) && (posiblesRutas(2,i) == 2)
+                    switch (i)
+                        case 1
+                            avanza(pub,odom,c,f+1);
+                        case 2
+                            avanza(pub,odom,c+1,f);
+                        case 3
+                            avanza(pub,odom,c,f-1);
+                        otherwise
+                            avanza(pub,odom,c-1,f);
+                    end
+                end
+            end
+        % Desplazamiento a derecha mapeando el mapa
         else
-            casilla = siempreDerecha(laser,angulo,odom,posiblesRutas,filas,columnas);
-            avanza(pub,odom,casilla(1),casilla(2));
+            destino = siempreDerecha(laser,angulo,odom,posiblesRutas,filas,columnas);
+            avanza(pub,odom,destino(1),destino(2));
         end            
 end
 %% DESCONECTAMOS

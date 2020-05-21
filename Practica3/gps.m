@@ -6,7 +6,11 @@ rutas = zeros(2,4);
 % Obtenemos las coordenadas de la casilla actual
 casillaX = round(pos.X) + 1;
 casillaY = round(pos.Y) + 1;
-% Estudio del mapa
+% Estudio del mapa 
+% INDICE: NO HAY CAMINO = 0 / HAY CAMINO = 1 / POSIBLE SALIDA = 2
+% INDICE: [FRENTRE ROBOT , DCHA ROBOT, DETRAS ROBOT, IZQ ROBOT]
+% RUTAS(1,X): CAMINOS POSIBLES
+% TURAS(2,X): POSIBLES SALIDAS
 if(angulo == 0)%-----------------------------------------------------------
     % Recto libre
     if(mapa(casillaY,casillaX+1)== 2) 

@@ -7,7 +7,7 @@ casillaY = round(pos.Y) + 1;
 % Marcamos como mapeada la casilla
 mapa(casillaY,casillaX) = 1;
 % Actualización de paredes
-aux_paredes = [2,2,2,2]; % pared frente robot / pared dcha robot / pared atrás robot / pared izq robot
+aux_paredes = [2,2,2,2]; % INDICE: [FRENTRE ROBOT , DCHA ROBOT, DETRAS ROBOT, IZQ ROBOT]
     % Frente robot
     if (casilla ==  1 || casilla == 5 || casilla == 6 || casilla == 7 || casilla == 11 || casilla == 13 || casilla == 14)
         aux_paredes(1) = 3;
@@ -64,10 +64,6 @@ if(angulo == -90)
     % Casilla izquierda
     mapa(casillaY-1,casillaX) = aux_paredes(1);
 end
-% PRUEBAS---------------------------------------------------------------------
-%     imprimeMapa(mapa,filas,columnas);
-%     disp('-------------------------');
-%-----------------------------------------------------------------------------
 % Representación del mapa
     % Conversor
     lista = zeros(filas+1,columnas+1);
@@ -83,4 +79,23 @@ end
         end
     end
     % Pantalla
-    imprimeMapa(lista,filas,columnas);
+    for i = 1:filas+1
+        concatenacion = "";
+        for j = 1:columnas+1
+            if(mod(i,2) == 1 && mod(j,2) == 1)
+                    concatenacion = strcat(concatenacion,'_');
+            else
+               switch lista(i,j)
+                   case 0
+                        concatenacion = strcat(concatenacion,'?');
+                   case 1
+                        concatenacion = strcat(concatenacion,'V');
+                   case 2
+                        concatenacion = strcat(concatenacion,'L');
+                   case 3
+                        concatenacion = strcat(concatenacion,'P');
+                end
+            end
+        end
+        disp (concatenacion);
+    end
